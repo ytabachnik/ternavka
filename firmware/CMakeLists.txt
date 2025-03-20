@@ -6,11 +6,15 @@ project(ternavka C CXX ASM)
 include(pico_sdk_import.cmake)
 pico_sdk_init()
 
+include_directories(${CMAKE_SOURCE_DIR}/hal)
+include_directories(${CMAKE_SOURCE_DIR}/lowlevel)
+
 add_subdirectory(libs/pico-ssd1306)
 
 add_executable(ternavka
     main.cpp
-    MCP23S17.cpp
+    lowlevel/MCP23S17.cpp
+    hal/LEDManager.cpp
 )
 
 target_include_directories(ternavka

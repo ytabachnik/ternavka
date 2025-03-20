@@ -6,6 +6,10 @@
 
 class MCP23S17 {
 public:
+    // Pin modes for the whole bus.
+    static const uint8_t PIN_MODE_INPUT = 0xFF;
+    static const uint8_t PIN_MODE_OUTPUT = 00;
+
     MCP23S17(uint8_t cs_pin, spi_inst_t* spi_port, uint8_t address);
 
     void write_register(uint8_t reg, uint8_t value);
