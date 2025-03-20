@@ -15,6 +15,7 @@ add_executable(ternavka
     main.cpp
     lowlevel/MCP23S17.cpp
     hal/LEDManager.cpp
+    hal/KeyboardManager.cpp
 )
 
 target_include_directories(ternavka
