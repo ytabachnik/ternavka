@@ -15,6 +15,8 @@ add_executable(ternavka
     hal/LEDManager.cpp
     hal/KeyboardManager.cpp
     hal/MultiDisplayManager.cpp
+
+    CurrentTimeManager.cpp
 )
 
 add_subdirectory(libs/pico-ssd1306)

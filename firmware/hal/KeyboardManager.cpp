@@ -1,6 +1,8 @@
 #include "KeyboardManager.h"
 #include "pico/stdlib.h"
 
+#include "CurrentTimeManager.h"
+
 KeyboardManager::KeyboardManager(MCP23S17& mcp, bool gpioA, int numKeys)
     : mcp(mcp), gpioA(gpioA), numKeys(numKeys), debounce_time(DEBOUNCE_TIME)
 {
@@ -34,7 +36,7 @@ bool KeyboardManager::is_key_pressed(int keyIndex)
         mcp.read_register(MCP23S17::GPIOB);  // GPIOA or GPIOB register
     key_state = ~key_state; // since the keys are connected to ground
 
-    uint32_t current_time = to_ms_since_boot(get_absolute_time());
+    uint32_t current_time = CurrentTimeManager::millis();
     uint8_t key_mask = 1 << keyIndex;
 
     bool curKeyState = key_state & key_mask; // current state

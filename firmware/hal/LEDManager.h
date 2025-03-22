@@ -24,6 +24,9 @@ public:
     // Constructor to initialize LED controller with hardwire level.
     LEDManager(const MCP23S17& mcp, bool gpioA, int numLEDs);
 
+    // Call this in the main app loop.
+    void update();
+
     // Methods to control LED states
     void on(int ledIndex);
     void off(int ledIndex);
@@ -31,7 +34,6 @@ public:
     void shortBlink(int ledIndex);
     void errorBlink(int ledIndex);
     void stopBlinking(int ledIndex);
-    void update(uint32_t currentTime);
 
 private:
     // Hardwire controller.

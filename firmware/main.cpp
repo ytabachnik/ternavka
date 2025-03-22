@@ -11,6 +11,8 @@
 #include "hal/KeyboardManager.h"
 #include "hal/MultiDisplayManager.h"
 
+#include "CurrentTimeManager.h"
+
 // SPI configuration.
 // Constants for SPI pins
 #define KYBD_SPI_PORT spi0
@@ -33,12 +35,6 @@
 
 // Default address of TCA9548 extender
 #define DISPLAY_EXTENDER_ADDR 0x70
-
-// Function to get the current time in milliseconds
-uint32_t getCurrentTimeMillis()
-{
-    return to_ms_since_boot(get_absolute_time());
-}
 
 const int LEDS_COUNT = 8;
 const int KEYS_COUNT = 8;
@@ -187,8 +183,9 @@ int main()
 
     while (true)
     {
-        uint32_t ms_since_boot = to_ms_since_boot(get_absolute_time());
-        ledManager.update(ms_since_boot);
+        CurrentTimeManager::update();
+
+        ledManager.update();
 
         ReadLEDStates(ledStates, kybdManager);
         UpdateLEDStates(ledStates, ledManager);

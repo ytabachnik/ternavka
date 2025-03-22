@@ -1,4 +1,5 @@
 #include "LEDManager.h"
+#include "CurrentTimeManager.h"
 
 LEDManager::LEDManager(const MCP23S17& mcp, bool gpioA, int numLEDs) :
     mcp23S17(mcp), isgpioA(gpioA), numLEDs(numLEDs)
@@ -83,8 +84,9 @@ void LEDManager::stopBlinking(int ledIndex)
     }
 }
 
-void LEDManager::update(uint32_t currentTime)
+void LEDManager::update()
 {
+    uint32_t currentTime = CurrentTimeManager::millis();
     for (int i = 0; i < numLEDs; ++i)
     {
         uint32_t elapsed = currentTime - lastUpdateTimes[i];
