@@ -14,18 +14,19 @@
 // SPI configuration.
 // Constants for SPI pins
 #define KYBD_SPI_PORT spi0
-#define KYBD_SPI_SCK 18
-#define KYBD_SPI_MOSI_PIN 19
-#define KYBD_SPI_MISO_PIN 16
+#define KYBD_SPI_SCK 18 // Physical pin 24
+#define KYBD_SPI_MOSI_PIN 19 // Physical pin 25
+#define KYBD_SPI_MISO_PIN 16 // Physical pin 21
 
-#define KYBD_SPI_CS_PIN 5 // physical pin 7 on Pico
+#define KYBD_SPI_CS_PIN 5 // Physical pin 7
 
+// An addr of the MCP23S17 controller, when A0, A1, A2 are set to 0.
 #define KYBD_MCP23S17_ADDR 0x20
 
 // I2C configuration.
 #define DISPLAY_I2C_PORT i2c1
-#define DISPLAY_I2C_SDA 2 // default SDA pin for I2C1
-#define DISPLAY_I2C_SCL 3 // default SCL pin for I2C1
+#define DISPLAY_I2C_SDA 2 // default SDA pin for I2C1, plysical pin 4
+#define DISPLAY_I2C_SCL 3 // default SCL pin for I2C1, plysical pin 5
 
 // Default addr of OLED display.
 #define DISPLAY_DEFAULT_ADDR 0x3c
@@ -139,8 +140,43 @@ int main()
     // HAL.
     KeyboardManager kybdManager(mcp23s17, true, KEYS_COUNT);
     LEDManager ledManager(mcp23s17, false, LEDS_COUNT);
+
+
     MultiDisplayManager displayManager(i2cExtender, 128, 64, DISPLAY_DEFAULT_ADDR,
         DISPLAY_I2C_PORT);
+
+    displayManager.setActiveDisplay(0);
+    displayManager.clear();
+    displayManager.drawStringCentered(10, 1, "MAUUU");
+    displayManager.show();
+
+    displayManager.setActiveDisplay(1);
+    displayManager.clear();
+    displayManager.drawStringCentered(10, 2, "MRRR");
+    displayManager.show();
+
+    displayManager.setActiveDisplay(2);
+    displayManager.clear();
+    displayManager.drawStringCentered(10, 3, "MIII");
+    displayManager.show();
+
+    /*
+    ssd1306_t oled;
+    oled.external_vcc=true;
+    bool res = ssd1306_init(
+        &oled,
+        128,
+        64,
+        0x3c,
+        DISPLAY_I2C_PORT);
+
+        if (res)
+        {
+            ssd1306_clear(&oled);
+            ssd1306_draw_string_centered(&oled, 10, 1, "MAUUUR");
+            ssd1306_show(&oled);
+        }
+    */
 
     LEDState ledStates[LEDS_COUNT];
     for (int8_t i = 0; i < KEYS_COUNT; i ++)

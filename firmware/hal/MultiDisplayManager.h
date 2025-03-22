@@ -2,11 +2,9 @@
 #define MULTIDISPLAYMANAGER_H
 
 #include "TCA9548A.h"
+#include "ssd1306.h"
 
-extern "C"
-{
-    #include "libs\pico-ssd1306\ssd1306.h"
-}
+#define MAX_DISPLAYS 8
 
 class MultiDisplayManager {
 public:
@@ -36,7 +34,7 @@ public:
 
 private:
     TCA9548A& _tca;
-    ssd1306_t _display;
+    ssd1306_t _displays[MAX_DISPLAYS];
     uint8_t _currentChannel;
 };
 

@@ -66,13 +66,14 @@ bool ssd1306_init(ssd1306_t *p, uint16_t width, uint16_t height, uint8_t address
 
     p->i2c_i=i2c_instance;
 
-
     p->bufsize=(p->pages)*(p->width);
-    if((p->buffer=malloc(p->bufsize+1))==NULL) {
+    if((p->buffer=malloc(p->bufsize+1))==NULL) 
+    {
         p->bufsize=0;
         return false;
     }
 
+    memset(p->buffer, 0, p->bufsize);
     ++(p->buffer);
 
     // from https://github.com/makerportal/rpi-pico-ssd1306
