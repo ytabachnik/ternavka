@@ -3,17 +3,6 @@
 
 MCP23S17::MCP23S17(uint8_t cs_pin, spi_inst_t* spi_port, uint8_t address)
     : cs_pin(cs_pin), spi_port(spi_port), address(address) {
-    init_spi();
-}
-
-void MCP23S17::init_spi() {
-    spi_init(spi_port, 1000 * 1000);  // 1 MHz
-    gpio_set_function(SCK_PIN, GPIO_FUNC_SPI);  // SCK
-    gpio_set_function(MOSI_PIN, GPIO_FUNC_SPI);  // MOSI
-    gpio_set_function(MISO_PIN, GPIO_FUNC_SPI);  // MISO
-    gpio_init(cs_pin);
-    gpio_set_dir(cs_pin, GPIO_OUT);
-    gpio_put(cs_pin, 1);  // CS high
 }
 
 void MCP23S17::write_register(uint8_t reg, uint8_t value) {

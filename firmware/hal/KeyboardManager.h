@@ -7,7 +7,7 @@
 #define MAX_KEYS_COUNT 16
 
 // Debounce time for the button, in msec
-#define DEBOUNCE_TIME 10
+#define DEBOUNCE_TIME 20
 
 class KeyboardManager {
 public:

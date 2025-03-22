@@ -44,8 +44,6 @@ private:
     spi_inst_t* spi_port;
     uint8_t address;
 
-    void init_spi();
-
     // Common logic for setting the PIN mode.
     void do_set_pin_mode(uint8_t gpio_reg, uint8_t pin, bool mode);
 
@@ -60,12 +58,6 @@ public:
     static const uint8_t GPPUB = 0x0D;
     static const uint8_t GPIOA = 0x12;
     static const uint8_t GPIOB = 0x13;
-
-private:
-    // Constants for SPI pins
-    static const uint8_t SCK_PIN = 18;
-    static const uint8_t MOSI_PIN = 19;
-    static const uint8_t MISO_PIN = 16;
 };
 
 #endif // MCP23S17_H

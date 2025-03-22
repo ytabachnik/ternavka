@@ -1,37 +1,13 @@
-#include <stdio.h>
-
 #include "pico/stdlib.h"
-#include "hardware/i2c.h"
-#include "hardware/spi.h"
-
 #include "lowlevel/MCP23S17.h"
-#include "lowlevel/TCA9548A.h"
+#include <stdio.h>
 
 #include "hal/LEDManager.h"
 #include "hal/KeyboardManager.h"
-#include "hal/MultiDisplayManager.h"
 
-// SPI configuration.
-// Constants for SPI pins
-#define KYBD_SPI_PORT spi0
-#define KYBD_SPI_SCK 18
-#define KYBD_SPI_MOSI_PIN 19
-#define KYBD_SPI_MISO_PIN 16
-
-#define KYBD_SPI_CS_PIN 5 // physical pin 7 on Pico
-
-#define KYBD_MCP23S17_ADDR 0x20
-
-// I2C configuration.
-#define DISPLAY_I2C_PORT i2c1
-#define DISPLAY_I2C_SDA 2 // default SDA pin for I2C1
-#define DISPLAY_I2C_SCL 3 // default SCL pin for I2C1
-
-// Default addr of OLED display.
-#define DISPLAY_DEFAULT_ADDR 0x3c
-
-// Default address of TCA9548 extender
-#define DISPLAY_EXTENDER_ADDR 0x70
+#define CS_PIN 5 // pin 7 on Pico
+#define SPI_PORT spi0
+#define MCP23S17_ADDR 0x20
 
 // Function to get the current time in milliseconds
 uint32_t getCurrentTimeMillis()
@@ -102,45 +78,13 @@ void UpdateLEDStates(LEDState* ledStates, LEDManager& ledManager)
     }
 }
 
-/// @brief Initialize the I2C part.
-void initializeI2C()
-{
-    i2c_init(DISPLAY_I2C_PORT, 100 * 1000); // Initialize I2C at 100kHz
-    gpio_set_function(DISPLAY_I2C_SDA, GPIO_FUNC_I2C);
-    gpio_set_function(DISPLAY_I2C_SCL, GPIO_FUNC_I2C);
-    gpio_pull_up(DISPLAY_I2C_SDA);
-    gpio_pull_up(DISPLAY_I2C_SCL);
-}
-
-/// @brief Initialize the SPI part.
-void initializeSPI()
-{
-    spi_init(KYBD_SPI_PORT, 1000 * 1000);  // 1 MHz
-    gpio_set_function(KYBD_SPI_SCK, GPIO_FUNC_SPI);  // SCK
-    gpio_set_function(KYBD_SPI_MOSI_PIN, GPIO_FUNC_SPI);  // MOSI
-    gpio_set_function(KYBD_SPI_MISO_PIN, GPIO_FUNC_SPI);  // MISO
-
-    gpio_init(KYBD_SPI_CS_PIN);
-    gpio_set_dir(KYBD_SPI_CS_PIN, GPIO_OUT);
-    gpio_put(KYBD_SPI_CS_PIN, 1);  // CS high
-}
-
 int main()
 {
     stdio_init_all();
+    MCP23S17 mcp23s17(CS_PIN, SPI_PORT, MCP23S17_ADDR);
 
-    initializeI2C();
-    initializeSPI();
-
-    // Low-level
-    MCP23S17 mcp23s17(KYBD_SPI_CS_PIN, KYBD_SPI_PORT, KYBD_MCP23S17_ADDR);
-    TCA9548A i2cExtender(DISPLAY_I2C_PORT, DISPLAY_EXTENDER_ADDR);
-
-    // HAL.
     KeyboardManager kybdManager(mcp23s17, true, KEYS_COUNT);
     LEDManager ledManager(mcp23s17, false, LEDS_COUNT);
-    MultiDisplayManager displayManager(i2cExtender, 128, 64, DISPLAY_DEFAULT_ADDR,
-        DISPLAY_I2C_PORT);
 
     LEDState ledStates[LEDS_COUNT];
     for (int8_t i = 0; i < KEYS_COUNT; i ++)
@@ -156,6 +100,8 @@ int main()
 
         ReadLEDStates(ledStates, kybdManager);
         UpdateLEDStates(ledStates, ledManager);
+
+        printf("mau");
     }
 
     return 0;
