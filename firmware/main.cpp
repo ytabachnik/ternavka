@@ -39,6 +39,15 @@
 const int LEDS_COUNT = 8;
 const int KEYS_COUNT = 8;
 
+// Screens-specific info.
+const int SCREEN_WIDTH = 128;
+const int SCREEN_HEIGHT = 64;
+
+const int SCREENS_COUNT = 3;
+const int LEFT_SCREEN = 0;
+const int CENTER_SCREEN = 1;
+const int RIGHT_SCREEN = 2;
+
 const int MAX_LED_STATE = 4;
 
 struct LEDState
@@ -48,10 +57,10 @@ struct LEDState
     bool keyHandled;
 };
 
-/// @brief Read the LED states from keyboard.
+/// @brief Read the keyboard.
 /// @param ledStates 
 /// @param kybdManager 
-void ReadLEDStates(LEDState* ledStates, KeyboardManager& kybdManager)
+void ReadKeyboard(LEDState* ledStates, KeyboardManager& kybdManager)
 {
     for (int i = 0; i < KEYS_COUNT; i ++)
     {
@@ -76,15 +85,14 @@ void ReadLEDStates(LEDState* ledStates, KeyboardManager& kybdManager)
     }
 }
 
-/// @brief Update LED states on the LEDs themselves.
-void UpdateLEDStates(LEDState* ledStates, LEDManager& ledManager)
+/// @brief Update states on the LEDs themselves.
+void UpdateKeyboardStateOnLEDs(LEDState* ledStates, LEDManager& ledManager)
 {
     for (int i = 0; i < LEDS_COUNT; i ++)
     {
         // Do not touch states if the button wasn't pressed.
         if (false == ledStates[i].isChanged) continue;
  
-        ledStates[i].isChanged = false;
         int ledState = ledStates[i].index;
         switch (ledState)
         {
@@ -96,6 +104,54 @@ void UpdateLEDStates(LEDState* ledStates, LEDManager& ledManager)
 
             default: break;
         }
+    }
+}
+
+/// @brief Update LED states on the screens
+void UpdateKeyboardStateOnScreens(LEDState* ledStates, MultiDisplayManager& displayManager)
+{
+    for (int i = 0; i < LEDS_COUNT; i ++)
+    {
+        // Do not touch states if the button wasn't pressed.
+        if (false == ledStates[i].isChanged) continue;
+ 
+        // Draw LED states on the screen.
+        switch (i)
+        {
+            case 0:
+            {
+                displayManager.setActiveDisplay(LEFT_SCREEN);
+
+                displayManager.clear();
+                if (ledStates[i].isChanged) displayManager.drawSquare(0, 0, 16, 16);
+                displayManager.show();
+
+                break;
+            }
+
+            case 7:
+            {
+                displayManager.setActiveDisplay(LEFT_SCREEN);
+
+                displayManager.clear();
+                if (ledStates[i].isChanged) displayManager.drawSquare(0, 32, 16, 16);
+                displayManager.show();
+
+                break;
+            }
+        
+        default:
+            break;
+        }
+    }
+}
+
+/// @brief Reset keyboard changed flags.
+void ResetKeyboardChangdFlags(LEDState* ledStates)
+{
+    for (int i = 0; i < LEDS_COUNT; i ++)
+    {
+        ledStates[i].isChanged = false;
     }
 }
 
@@ -137,10 +193,10 @@ int main()
     KeyboardManager kybdManager(mcp23s17, true, KEYS_COUNT);
     LEDManager ledManager(mcp23s17, false, LEDS_COUNT);
 
+    MultiDisplayManager displayManager(i2cExtender, SCREEN_WIDTH, SCREEN_HEIGHT,
+        DISPLAY_DEFAULT_ADDR, DISPLAY_I2C_PORT);
 
-    MultiDisplayManager displayManager(i2cExtender, 128, 64, DISPLAY_DEFAULT_ADDR,
-        DISPLAY_I2C_PORT);
-
+    /*
     displayManager.setActiveDisplay(0);
     displayManager.clear();
     displayManager.drawStringCentered(10, 1, "MAUUU");
@@ -155,23 +211,6 @@ int main()
     displayManager.clear();
     displayManager.drawStringCentered(10, 3, "MIII");
     displayManager.show();
-
-    /*
-    ssd1306_t oled;
-    oled.external_vcc=true;
-    bool res = ssd1306_init(
-        &oled,
-        128,
-        64,
-        0x3c,
-        DISPLAY_I2C_PORT);
-
-        if (res)
-        {
-            ssd1306_clear(&oled);
-            ssd1306_draw_string_centered(&oled, 10, 1, "MAUUUR");
-            ssd1306_show(&oled);
-        }
     */
 
     LEDState ledStates[LEDS_COUNT];
@@ -187,8 +226,12 @@ int main()
 
         ledManager.update();
 
-        ReadLEDStates(ledStates, kybdManager);
-        UpdateLEDStates(ledStates, ledManager);
+        ReadKeyboard(ledStates, kybdManager);
+
+        UpdateKeyboardStateOnLEDs(ledStates, ledManager);
+        UpdateKeyboardStateOnScreens(ledStates, displayManager);
+
+        ResetKeyboardChangdFlags(ledStates);
     }
 
     return 0;
