@@ -14,7 +14,9 @@ void MultiDisplayManager::setActiveDisplay(uint8_t channel) {
     if (channel >= MAX_DISPLAYS) return;
     _tca.selectChannel(channel);
     _currentChannel = channel;
-    ssd1306_init(&_displays[channel], _displays[channel].width, _displays[channel].height, _displays[channel].address, _displays[channel].i2c_i);
+
+    // YT, 2025/03/23: commented out to avoid extra flickering.
+    //ssd1306_init(&_displays[channel], _displays[channel].width, _displays[channel].height, _displays[channel].address, _displays[channel].i2c_i);
 }
 
 void MultiDisplayManager::deinit() {

@@ -60,12 +60,20 @@ struct LEDState
 /// @brief Read the keyboard.
 /// @param ledStates 
 /// @param kybdManager 
-void ReadKeyboard(LEDState* ledStates, KeyboardManager& kybdManager)
+void ReadKeyboard(LEDState* ledStates, KeyboardManager& kybdManager, MultiDisplayManager& displayManager)
 {
+    uint32_t timeSincePressed = 0;
     for (int i = 0; i < KEYS_COUNT; i ++)
     {
-        if (kybdManager.is_key_pressed(i))
+        if (kybdManager.is_key_pressed(i, timeSincePressed))
         {
+            displayManager.setActiveDisplay(CENTER_SCREEN);
+
+            char textMessage[32] = {0};
+            sprintf(textMessage, "%i pressed - %i msec", i, timeSincePressed);
+            displayManager.clearSquare(0, i*8, 128, 8);
+            displayManager.drawString(0, i*8, 1, textMessage);
+
             // Waiting for key release before the mode change.
             if (ledStates[i].keyHandled) continue;
 
@@ -80,9 +88,13 @@ void ReadKeyboard(LEDState* ledStates, KeyboardManager& kybdManager)
         }
         else
         {
+            displayManager.clearSquare(0, i*8, 128, 8);
             ledStates[i].keyHandled = false;
         }
     }
+
+    // Update buffer content once.
+    displayManager.show();
 }
 
 /// @brief Update states on the LEDs themselves.
@@ -158,7 +170,7 @@ void ResetKeyboardChangdFlags(LEDState* ledStates)
 /// @brief Initialize the I2C part.
 void initializeI2C()
 {
-    i2c_init(DISPLAY_I2C_PORT, 100 * 1000); // Initialize I2C at 100kHz
+    i2c_init(DISPLAY_I2C_PORT, 400 * 1000); // Initialize I2C at 400kHz
     gpio_set_function(DISPLAY_I2C_SDA, GPIO_FUNC_I2C);
     gpio_set_function(DISPLAY_I2C_SCL, GPIO_FUNC_I2C);
     gpio_pull_up(DISPLAY_I2C_SDA);
@@ -226,7 +238,7 @@ int main()
 
         ledManager.update();
 
-        ReadKeyboard(ledStates, kybdManager);
+        ReadKeyboard(ledStates, kybdManager, displayManager);
 
         UpdateKeyboardStateOnLEDs(ledStates, ledManager);
         UpdateKeyboardStateOnScreens(ledStates, displayManager);

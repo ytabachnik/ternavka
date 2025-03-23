@@ -12,7 +12,9 @@
 class KeyboardManager {
 public:
     KeyboardManager(MCP23S17& mcp, bool gpioA, int numKeys);
-    bool is_key_pressed(int keyIndex);
+
+    // timeSincePressed contains the time since the button is pressed.
+    bool is_key_pressed(int keyIndex, uint32_t& timeSincePressed);
 
 private:
     MCP23S17& mcp;

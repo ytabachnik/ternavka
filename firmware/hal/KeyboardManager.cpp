@@ -25,8 +25,10 @@ KeyboardManager::KeyboardManager(MCP23S17& mcp, bool gpioA, int numKeys)
     }
 }
 
-bool KeyboardManager::is_key_pressed(int keyIndex)
+bool KeyboardManager::is_key_pressed(int keyIndex, uint32_t& timeSincePressed)
 {
+    timeSincePressed = 0;
+
     if (keyIndex < 0 || keyIndex >= numKeys || keyIndex >= MAX_KEYS_COUNT)
     {
         return false;
@@ -47,7 +49,8 @@ bool KeyboardManager::is_key_pressed(int keyIndex)
         last_debounce_times[keyIndex] = current_time;
     }
 
-    if ((current_time - last_debounce_times[keyIndex]) > debounce_time)
+    timeSincePressed = current_time - last_debounce_times[keyIndex];
+    if (timeSincePressed > debounce_time)
     {
         // Still keeping the same state, so the button was indeed pressed/unpressed.
         return curKeyState;
