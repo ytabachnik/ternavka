@@ -21,6 +21,22 @@ add_executable(ternavka
     configuration/FeedSettings.cpp 
     configuration/StepMotorSettings.cpp 
 
+    ui/MenuSystem.cpp 
+    ui/MenuComponent.cpp
+
+    ui/SubmenuController.cpp 
+    ui/SubmenuModel.cpp 
+    ui/SubmenuView.cpp 
+
+    ui/DialogController.cpp 
+    ui/DialogModel.cpp 
+    ui/DialogView.cpp
+
+    ui/SpeedDialogController.cpp 
+    ui/SpeedDialogModel.cpp 
+    ui/SpeedDialogView.cpp
+
+    SystemFacade.cpp
     CurrentTimeManager.cpp
 )
 
@@ -31,6 +47,7 @@ target_include_directories(ternavka PRIVATE
      hal
      lowlevel
      configuration
+     ui
      libs/pico-ssd1306
 )
 
