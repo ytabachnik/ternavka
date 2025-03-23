@@ -16,6 +16,11 @@ add_executable(ternavka
     hal/KeyboardManager.cpp
     hal/MultiDisplayManager.cpp
 
+    configuration/Configuration.cpp 
+    configuration/EncoderSettings.cpp 
+    configuration/FeedSettings.cpp 
+    configuration/StepMotorSettings.cpp 
+
     CurrentTimeManager.cpp
 )
 
@@ -25,11 +30,12 @@ target_include_directories(ternavka PRIVATE
     ${CMAKE_CURRENT_LIST_DIR}
      hal
      lowlevel
+     configuration
      libs/pico-ssd1306
 )
 
 # pull in common dependencies
-target_link_libraries(ternavka pico_stdlib hardware_i2c hardware_spi pico_ssd1306)
+target_link_libraries(ternavka pico_stdlib pico_ssd1306 hardware_i2c hardware_spi hardware_flash)
 
 # create map/bin/hex file etc.
 pico_add_extra_outputs(ternavka)
