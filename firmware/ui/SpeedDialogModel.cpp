@@ -1,8 +1,13 @@
 #include "SpeedDialogModel.h"
 
-SpeedDialogModel::SpeedDialogModel(const std::string& name, int initialSpeed) : name(name), speed(initialSpeed) {}
+SpeedDialogModel::SpeedDialogModel(const std::string& name, int initialSpeed) :
+    Model(name),
+    speed(initialSpeed)
+{
+}
 
-void SpeedDialogModel::increaseSpeed() {
+void SpeedDialogModel::increaseSpeed()
+{
     speed++;
     update();
 }
@@ -10,10 +15,6 @@ void SpeedDialogModel::increaseSpeed() {
 void SpeedDialogModel::decreaseSpeed() {
     speed--;
     update();
-}
-
-std::string SpeedDialogModel::getName() const {
-    return name;
 }
 
 int SpeedDialogModel::getSpeed() const {

@@ -6,14 +6,17 @@
 
 class MenuSystem {
 private:
-    std::vector<MenuComponent*> components;
-    int currentIndex;
+
+    MenuComponent* rootMenuComponent;
 public:
-    MenuSystem();
-    void addComponent(MenuComponent* component);
-    void switchTo(int index);
-    void handleButtonPress(int button);
-    void displayCurrent();
+
+    MenuSystem(MenuComponent* root);
+
+    // Handle the key state changed.
+    void handleKeyStateChanged(int8_t keyIndex)
+    {
+        rootMenuComponent->handleKeyStateChanged(keyIndex);
+    }
 };
 
 #endif // MENUSYSTEM_H

@@ -1,14 +1,12 @@
 #include "DialogModel.h"
 
-DialogModel::DialogModel(const std::string& name) : name(name), mode(MAIN) {}
+DialogModel::DialogModel(const std::string& name) : Model(name), mode(MAIN) 
+{
+}
 
 void DialogModel::setMode(DialogMode newMode) {
     mode = newMode;
     update();
-}
-
-std::string DialogModel::getName() const {
-    return name;
 }
 
 DialogMode DialogModel::getMode() const {

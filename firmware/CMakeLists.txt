@@ -24,10 +24,6 @@ add_executable(ternavka
     ui/MenuSystem.cpp 
     ui/MenuComponent.cpp
 
-    ui/SubmenuController.cpp 
-    ui/SubmenuModel.cpp 
-    ui/SubmenuView.cpp 
-
     ui/DialogController.cpp 
     ui/DialogModel.cpp 
     ui/DialogView.cpp

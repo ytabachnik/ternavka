@@ -9,6 +9,7 @@ KeyboardManager::KeyboardManager(MCP23S17& mcp, bool gpioA, int numKeys)
     for (int i = 0; i < numKeys && i < MAX_KEYS_COUNT; ++i)
     {
         last_key_states[i] = false;
+        last_key_state_changed[i] = false;
         last_debounce_times[i] = 0;
     }
 
@@ -25,7 +26,7 @@ KeyboardManager::KeyboardManager(MCP23S17& mcp, bool gpioA, int numKeys)
     }
 }
 
-bool KeyboardManager::is_key_pressed(int keyIndex, uint32_t& timeSincePressed)
+bool KeyboardManager::isKeyPressed(int keyIndex, uint32_t& timeSincePressed)
 {
     timeSincePressed = 0;
 
@@ -47,6 +48,7 @@ bool KeyboardManager::is_key_pressed(int keyIndex, uint32_t& timeSincePressed)
     {
         last_key_states[keyIndex] = curKeyState;
         last_debounce_times[keyIndex] = current_time;
+        last_key_state_changed[keyIndex] = true;
     }
 
     timeSincePressed = current_time - last_debounce_times[keyIndex];
@@ -58,4 +60,21 @@ bool KeyboardManager::is_key_pressed(int keyIndex, uint32_t& timeSincePressed)
 
     // Not yet...
     return false;
+}
+
+// this one used to detect "ON" state only, for convenience
+bool KeyboardManager::isKeyStateChanged(int keyIndex)
+{
+    bool newState = false;
+    return isKeyStateChanged(keyIndex, newState) & newState;
+}
+
+bool KeyboardManager::isKeyStateChanged(int keyIndex, bool& newState)
+{
+    if (!last_key_state_changed[keyIndex]) return false;
+
+    newState = last_key_states[keyIndex];
+    last_key_state_changed[keyIndex] = false;
+
+    return true;
 }

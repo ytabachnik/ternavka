@@ -4,9 +4,13 @@ MenuComponent::MenuComponent(Controller* controller, View* view, Model* model, S
     : controller(controller),
       view(view),
       model(model),
-      facade(facade)
-{
+      facade(facade),
 
+      curChild(nullptr),
+      curChildIndex(-1),
+      activeChild(nullptr),
+      activeChildIndex(-1)
+{
 }
 
 Controller* MenuComponent::getController() const 

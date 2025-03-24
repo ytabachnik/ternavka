@@ -1,7 +1,11 @@
 #include "MenuSystem.h"
 
-MenuSystem::MenuSystem() : currentIndex(0) {}
+MenuSystem::MenuSystem(MenuComponent* root) :
+    rootMenuComponent(root)
+{
+}
 
+/*
 void MenuSystem::addComponent(MenuComponent* component) {
     components.push_back(component);
 }
@@ -25,3 +29,5 @@ void MenuSystem::displayCurrent() {
         components[currentIndex]->getView()->render();
     }
 }
+
+*/
