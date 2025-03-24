@@ -1,8 +1,18 @@
 #include "MenuSystem.h"
 
-MenuSystem::MenuSystem(MenuComponent* root) :
-    rootMenuComponent(root)
+MenuSystem::MenuSystem()
 {
+    setRoot(nullptr);
+}
+
+MenuSystem::MenuSystem(MenuComponent* root)
+{
+    setRoot(root);
+}
+
+void MenuSystem::setRoot(MenuComponent* root)
+{
+    rootMenuComponent = root;
 }
 
 /*

@@ -202,7 +202,7 @@ void initializeSPI()
 }
 
 // Initialize the menu subsystem.
-void initializeMenu(SystemFacade& facade);
+void initializeMenuSystem(MenuSystem& menuSystem, SystemFacade& facade);
 
 int main()
 {
@@ -224,7 +224,9 @@ int main()
 
     // System Facade joins all the HAL components together.
     SystemFacade facade(&displayManager, &ledManager, &kybdManager);
-    initializeMenu(facade);
+    
+    MenuSystem menuSystem;
+    initializeMenuSystem(menuSystem, facade);
 
     /*
     displayManager.setActiveDisplay(0);
@@ -258,6 +260,14 @@ int main()
 
         ReadKeyboard(ledStates, kybdManager, displayManager);
 
+        for (int8_t i = 0; i < KEYS_COUNT; i ++)
+        {
+            if (kybdManager.isKeyStateChanged(i))
+            {
+                menuSystem.handleKeyStateChanged(i);
+            }
+        }
+
         UpdateKeyboardStateOnLEDs(ledStates, ledManager);
         UpdateKeyboardStateOnScreens(ledStates, displayManager);
 
@@ -267,105 +277,83 @@ int main()
     return 0;
 }
 
-void initializeMenu(SystemFacade& facade)
+void initializeMenuSystem(MenuSystem& menuSystem, SystemFacade& facade)
 {
-        // Create models
-        // Settings - Screen
-        DialogModel brightnessDialogModel("Brightness");
-        DialogView brightnessDialogView(&brightnessDialogModel);
-        DialogController brightnessDialogController(&brightnessDialogModel, &brightnessDialogView);
-        MenuComponent brightnessComponent(&brightnessDialogController, &brightnessDialogView, &brightnessDialogModel, &facade);
+    // Create models
+    // Settings - Screen
+    DialogModel brightnessDialogModel("Brightness");
+    DialogView brightnessDialogView(&brightnessDialogModel);
+    DialogController brightnessDialogController(&brightnessDialogModel, &brightnessDialogView);
+    MenuComponent brightnessComponent(&brightnessDialogController, &brightnessDialogView, &brightnessDialogModel, &facade);
 
-        DialogModel contrastDialogModel("Contrast");
-        DialogView contrastDialogView(&contrastDialogModel);
-        DialogController contrastDialogController(&contrastDialogModel, &contrastDialogView);
-        MenuComponent contrastComponent(&contrastDialogController, &contrastDialogView, &contrastDialogModel, &facade);
+    DialogModel contrastDialogModel("Contrast");
+    DialogView contrastDialogView(&contrastDialogModel);
+    DialogController contrastDialogController(&contrastDialogModel, &contrastDialogView);
+    MenuComponent contrastComponent(&contrastDialogController, &contrastDialogView, &contrastDialogModel, &facade);
 
-        // Settings - Connection
-        DialogModel usbDialogModel("USB");
-        DialogView usbDialogView(&usbDialogModel);
-        DialogController usbDialogController(&usbDialogModel, &usbDialogView);
-        MenuComponent usbComponent(&usbDialogController, &usbDialogView, &usbDialogModel, &facade);
+    // Settings - Connection
+    DialogModel usbDialogModel("USB");
+    DialogView usbDialogView(&usbDialogModel);
+    DialogController usbDialogController(&usbDialogModel, &usbDialogView);
+    MenuComponent usbComponent(&usbDialogController, &usbDialogView, &usbDialogModel, &facade);
 
-        DialogModel bluetoothDialogModel("Bluetooth");
-        DialogView blueToothDialogView(&bluetoothDialogModel);
-        DialogController blueToothDialogController(&bluetoothDialogModel, &blueToothDialogView);
-        MenuComponent blueToothComponent(&blueToothDialogController, &blueToothDialogView, &bluetoothDialogModel, &facade);
+    DialogModel bluetoothDialogModel("Bluetooth");
+    DialogView blueToothDialogView(&bluetoothDialogModel);
+    DialogController blueToothDialogController(&bluetoothDialogModel, &blueToothDialogView);
+    MenuComponent blueToothComponent(&blueToothDialogController, &blueToothDialogView, &bluetoothDialogModel, &facade);
 
-        DialogModel wifiDialogModel("wifi");
-        DialogView wifiDialogView(&wifiDialogModel);
-        DialogController wifiDialogController(&wifiDialogModel, &wifiDialogView);
-        MenuComponent wifiComponent(&wifiDialogController, &wifiDialogView, &wifiDialogModel, &facade);
+    DialogModel wifiDialogModel("wifi");
+    DialogView wifiDialogView(&wifiDialogModel);
+    DialogController wifiDialogController(&wifiDialogModel, &wifiDialogView);
+    MenuComponent wifiComponent(&wifiDialogController, &wifiDialogView, &wifiDialogModel, &facade);
 
-        // Top level
-        DialogModel freeDialogModel("FREE");
-        DialogView freeDialogView(&freeDialogModel);
-        DialogController freeDialogController(&freeDialogModel, &freeDialogView);
-        MenuComponent freeDialogComponent(&freeDialogController, &freeDialogView, &freeDialogModel, &facade);
+    // Top level
+    DialogModel freeDialogModel("FREE");
+    DialogView freeDialogView(&freeDialogModel);
+    DialogController freeDialogController(&freeDialogModel, &freeDialogView);
+    MenuComponent freeDialogComponent(&freeDialogController, &freeDialogView, &freeDialogModel, &facade);
 
-        DialogModel stepDialogModel("STEP");
-        DialogView stepDialogView(&stepDialogModel);
-        DialogController stepDialogController(&stepDialogModel, &stepDialogView);
-        MenuComponent stepDialogComponent(&stepDialogController, &stepDialogView, &stepDialogModel, &facade);
+    DialogModel stepDialogModel("STEP");
+    DialogView stepDialogView(&stepDialogModel);
+    DialogController stepDialogController(&stepDialogModel, &stepDialogView);
+    MenuComponent stepDialogComponent(&stepDialogController, &stepDialogView, &stepDialogModel, &facade);
 
-        DialogModel settingsSubmenuModel("SETTINGS");
-        DialogView settingsSubmenuView(&settingsSubmenuModel);
-        DialogController settingsSubmenuController(&settingsSubmenuModel, &settingsSubmenuView);
-        MenuComponent settingsSubmenuComponent(&settingsSubmenuController, &settingsSubmenuView, &settingsSubmenuModel, &facade);
+    DialogModel settingsSubmenuModel("SETTINGS");
+    DialogView settingsSubmenuView(&settingsSubmenuModel);
+    DialogController settingsSubmenuController(&settingsSubmenuModel, &settingsSubmenuView);
+    MenuComponent settingsSubmenuComponent(&settingsSubmenuController, &settingsSubmenuView, &settingsSubmenuModel, &facade);
 
-        DialogModel displaySubmenuModel("DISPLAY");
-        DialogView displaySubmenuView(&displaySubmenuModel);
-        DialogController displaySubmenuController(&displaySubmenuModel, &displaySubmenuView);
-        MenuComponent displaySubmenuComponent(&displaySubmenuController, &displaySubmenuView, &displaySubmenuModel, &facade);
+    DialogModel displaySubmenuModel("DISPLAY");
+    DialogView displaySubmenuView(&displaySubmenuModel);
+    DialogController displaySubmenuController(&displaySubmenuModel, &displaySubmenuView);
+    MenuComponent displaySubmenuComponent(&displaySubmenuController, &displaySubmenuView, &displaySubmenuModel, &facade);
 
-        DialogModel connectionSubmenuModel("connection");
-        DialogView connectionSubmenuView(&connectionSubmenuModel);
-        DialogController connectionSubmenuController(&connectionSubmenuModel, &connectionSubmenuView);
-        MenuComponent connectionSubmenuComponent(&connectionSubmenuController, &connectionSubmenuView, &connectionSubmenuModel, &facade);
+    DialogModel connectionSubmenuModel("connection");
+    DialogView connectionSubmenuView(&connectionSubmenuModel);
+    DialogController connectionSubmenuController(&connectionSubmenuModel, &connectionSubmenuView);
+    MenuComponent connectionSubmenuComponent(&connectionSubmenuController, &connectionSubmenuView, &connectionSubmenuModel, &facade);
 
-        // Build the hierarchy.
-        DialogModel rootModel("root");
-        DialogView rootView(&rootModel);
-        DialogController rootController(&rootModel, &rootView);
-        MenuComponent rootComponent(&rootController, &rootView, &rootModel, &facade);
+    // Build the hierarchy.
+    DialogModel rootModel("root");
+    DialogView rootView(&rootModel);
+    DialogController rootController(&rootModel, &rootView);
+    MenuComponent rootComponent(&rootController, &rootView, &rootModel, &facade);
 
+    displaySubmenuComponent.addChildren(&brightnessComponent);
+    displaySubmenuComponent.addChildren(&contrastComponent);
 
-        displaySubmenuComponent.addChildren(&brightnessComponent);
-        displaySubmenuComponent.addChildren(&contrastComponent);
+    connectionSubmenuComponent.addChildren(&usbComponent);
+    connectionSubmenuComponent.addChildren(&wifiComponent);
+    connectionSubmenuComponent.addChildren(&blueToothComponent);
 
-        connectionSubmenuComponent.addChildren(&usbComponent);
-        connectionSubmenuComponent.addChildren(&wifiComponent);
-        connectionSubmenuComponent.addChildren(&blueToothComponent);
+    settingsSubmenuComponent.addChildren(&displaySubmenuComponent);
+    settingsSubmenuComponent.addChildren(&connectionSubmenuComponent);
 
-        settingsSubmenuComponent.addChildren(&displaySubmenuComponent);
-        settingsSubmenuComponent.addChildren(&connectionSubmenuComponent);
+    rootComponent.addChildren(&freeDialogComponent);
+    rootComponent.addChildren(&stepDialogComponent);
+    rootComponent.addChildren(&settingsSubmenuComponent);
+    rootComponent.setCurrentChildID(0);
 
-        rootComponent.addChildren(&freeDialogComponent);
-        rootComponent.addChildren(&stepDialogComponent);
-        rootComponent.addChildren(&settingsSubmenuComponent);
-        rootComponent.setCurrentChildID(0);
-
-        // Create menu system
-        MenuSystem menuSystem(&rootComponent);
-
-        menuSystem.handleKeyStateChanged(2);
-        menuSystem.handleKeyStateChanged(2);
-        menuSystem.handleKeyStateChanged(2);
-        menuSystem.handleKeyStateChanged(1);
-
-        /*
-        // Simulate button presses
-        menuSystem.switchTo(0); // Switch to Speed dialog
-        menuSystem.handleButtonPress(4); // Increase speed
-        menuSystem.handleButtonPress(5); // Decrease speed
-    
-        menuSystem.switchTo(1); // Switch to FREE dialog
-        menuSystem.handleButtonPress(7); // Blue mode
-    
-        menuSystem.switchTo(4); // Switch to LIMITS submenu
-        menuSystem.handleButtonPress(3); // Scroll right
-    
-        // Display current view
-        menuSystem.displayCurrent();
-        */
+    // Create menu system
+    menuSystem.setRoot(&rootComponent);
 }

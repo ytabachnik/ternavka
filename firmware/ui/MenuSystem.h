@@ -6,11 +6,14 @@
 
 class MenuSystem {
 private:
-
     MenuComponent* rootMenuComponent;
-public:
 
+public:
+    MenuSystem();
     MenuSystem(MenuComponent* root);
+
+    // Set the menu root.
+    void setRoot(MenuComponent* root);
 
     // Handle the key state changed.
     void handleKeyStateChanged(int8_t keyIndex)
