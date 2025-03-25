@@ -41,32 +41,50 @@ void MenuComponent::handleKeyStateChanged(int8_t keyIndex)
         case SystemKeyID::MENU_PREV_KEY:
             if (!subMenus.empty()) 
             {
-                subMenus[selectedIndex]->onDeselected();
-                selectedIndex = (selectedIndex == 0) ? subMenus.size() - 1 : selectedIndex - 1;
-                subMenus[selectedIndex]->onSelected();
+                if (selectedIndex == 0) 
+                {
+                    onAttemptToScrollBeforeFirstMenuItem();
+                }
+                else
+                {
+                    subMenus[selectedIndex]->onDeselected();
+                    selectedIndex --;
+                    subMenus[selectedIndex]->onSelected();
 
-                if (subMenus[selectedIndex]->isTerminal())
-                {
-                    activeSubMenu = subMenus[selectedIndex]; // Make the dialog active
-                } else
-                {
-                    activeSubMenu = nullptr;
+                    if (subMenus[selectedIndex]->isTerminal())
+                    {
+                        activeSubMenu = subMenus[selectedIndex]; // Make the dialog active
+                    }
+                    else
+                    {
+                        activeSubMenu = nullptr;
+                    }
                 }
             }
+
             break;
 
         case SystemKeyID::MENU_NEXT_KEY:
             if (!subMenus.empty()) 
             {
-                subMenus[selectedIndex]->onDeselected();
-                selectedIndex = (selectedIndex + 1) % subMenus.size();
-                subMenus[selectedIndex]->onSelected();
-
-                if (subMenus[selectedIndex]->isTerminal())
+                if (selectedIndex == subMenus.size() - 1) 
                 {
-                    activeSubMenu = subMenus[selectedIndex]; // Make the dialog active
-                } else {
-                    activeSubMenu = nullptr;
+                    onAttemptToScrollAfterLastMenuItem();
+                }
+                else
+                {
+                    subMenus[selectedIndex]->onDeselected();
+                    selectedIndex ++;
+                    subMenus[selectedIndex]->onSelected();
+
+                    if (subMenus[selectedIndex]->isTerminal())
+                    {
+                        activeSubMenu = subMenus[selectedIndex]; // Make the dialog active
+                    }
+                    else
+                    {
+                        activeSubMenu = nullptr;
+                    }
                 }
             }
 
@@ -110,18 +128,32 @@ void MenuComponent::display() {
 }
 
 // New methods implementations
-void MenuComponent::onEntered() {
+void MenuComponent::onEntered()
+{
     std::cout << name << " entered." << std::endl;
 }
 
-void MenuComponent::onExited() {
+void MenuComponent::onExited()
+{
     std::cout << name << " exited." << std::endl;
 }
 
-void MenuComponent::onSelected() {
+void MenuComponent::onSelected()
+{
     std::cout << name << " selected." << std::endl;
 }
 
-void MenuComponent::onDeselected() {
+void MenuComponent::onDeselected()
+{
     std::cout << name << " deselected." << std::endl;
+}
+
+void MenuComponent::onAttemptToScrollBeforeFirstMenuItem()
+{
+    std::cout << name << " SCROLL TOO LEFT." << std::endl;
+}
+
+void MenuComponent::onAttemptToScrollAfterLastMenuItem()
+{
+    std::cout << name << " SCROLL TOO RIGHT." << std::endl;
 }

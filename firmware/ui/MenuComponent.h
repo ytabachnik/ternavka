@@ -22,6 +22,10 @@ public:
     virtual void onSelected();
     virtual void onDeselected();
 
+    // Handling of the "scroll to left/scroll too right" methods.
+    virtual void onAttemptToScrollBeforeFirstMenuItem();
+    virtual void onAttemptToScrollAfterLastMenuItem();
+
 private:
     MenuComponent* parent;
     std::vector<BaseMenuComponent*> subMenus;

@@ -287,7 +287,9 @@ MenuComponent mainMenu("Main Menu");
 MenuComponent subMenu1("Sub Menu 1");
 MenuComponent subMenu2("Sub Menu 2");
 MenuComponent subSubMenu1("Sub Sub Menu 1");
+MenuComponent subSubMenu2("Sub Sub Menu 2");
 DialogComponent dialog1("Dialog 1");
+DialogComponent dialog2("SubDialog 2");
 
 void initializeMenu(SystemMenu& systemMenu, SystemFacade& facade)
 {
@@ -295,7 +297,10 @@ void initializeMenu(SystemMenu& systemMenu, SystemFacade& facade)
     mainMenu.addSubMenu(&subMenu1);
     mainMenu.addSubMenu(&subMenu2);
     mainMenu.addSubMenu(&dialog1);
+
     subMenu1.addSubMenu(&subSubMenu1);
+    subMenu1.addSubMenu(&subSubMenu2);
+    subMenu1.addSubMenu(&dialog2);
 
     systemMenu.setActiveMenu(&mainMenu);
 }
