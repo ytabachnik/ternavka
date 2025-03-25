@@ -71,10 +71,14 @@ bool KeyboardManager::isKeyStateChanged(int keyIndex)
 
 bool KeyboardManager::isKeyStateChanged(int keyIndex, bool& newState)
 {
-    if (!last_key_state_changed[keyIndex]) return false;
+    uint32_t timeSincePressed  = 0;
+    newState = isKeyPressed(keyIndex, timeSincePressed);
 
-    newState = last_key_states[keyIndex];
-    last_key_state_changed[keyIndex] = false;
+    if (last_key_state_changed[keyIndex] != newState)
+    {
+        last_key_state_changed[keyIndex] = newState;
+        return true;
+    }
 
-    return true;
+    return false;
 }

@@ -5,6 +5,7 @@
 #include "View.h"
 #include "Model.h"
 
+#include "SystemConsts.h"
 #include "SystemFacade.h"
 
 #include <pico/stdio.h>
@@ -59,24 +60,22 @@ public:
     virtual bool handleKeyStateChanged(int8_t keyIndex)
     {
         // Firstly send the key presses to the active child, if any.
-        if (activeChild && activeChild->handleKeyStateChanged(keyIndex)) return true;
+        //if (activeChild && activeChild->handleKeyStateChanged(keyIndex)) return true;
         
         // Then - to the current child, if any.
-        if (curChild && curChild->handleKeyStateChanged(keyIndex)) return true;
+        //if (curChild && curChild->handleKeyStateChanged(keyIndex)) return true;
 
         // TODO: now call the method on the particular class level.
         //if (keyIndex == 5 && canActivateChild()) activateChild();
         // TEMP!!!
-        if (keyIndex == 1 && canSelectPrev())
+        SystemKeyID keyID = static_cast<SystemKeyID>(keyIndex);
+        switch (keyID)
         {
-            selectPrev();
-            return true;
-        }
-
-        if (keyIndex == 2 && canSelectNext())
-        {
-            selectNext();
-            return true;
+            case SystemKeyID::MENU_PREV_KEY: return handlePrevKeyStateChanged();
+            case SystemKeyID::MENU_NEXT_KEY: return handleNextKeyStateChanged();
+        
+        default:
+            break;
         }
 
         //if (keyIndex == 6 && canDeactivateChild()) deactivateChild();
@@ -215,6 +214,42 @@ public:
     }
 
 protected:
+    // Called when Prev key state changed.
+    virtual bool handlePrevKeyStateChanged()
+    {
+        // No way to select Prev/Next menu item if there is no children on this level.
+        if (!hasChildren()) return false;
+
+        if (canSelectPrev())
+        {
+            selectPrev();
+            return true;
+        }
+        else
+        {
+            facade->getLEDManager()->errorBlink((int)SystemLedID::MENU_PREV_LED);
+            return false;
+        }
+    }
+
+    // Called when Next key state is changed.
+    virtual bool handleNextKeyStateChanged()
+    {
+        // No way to select Prev/Next menu item if there is no children on this level.
+        if (!hasChildren()) return false;
+    
+        if (canSelectNext())
+        {
+            selectNext();
+            return true;
+        }
+        else
+        {
+            facade->getLEDManager()->errorBlink((int)SystemLedID::MENU_NEXT_LED);
+            return false;
+        }
+    }
+    
     // Called by a menu system when a component is activated.
     virtual void activate() 
     {

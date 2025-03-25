@@ -258,7 +258,7 @@ int main()
 
         ledManager.update();
 
-        ReadKeyboard(ledStates, kybdManager, displayManager);
+//        ReadKeyboard(ledStates, kybdManager, displayManager);
 
         for (int8_t i = 0; i < KEYS_COUNT; i ++)
         {
@@ -268,10 +268,10 @@ int main()
             }
         }
 
-        UpdateKeyboardStateOnLEDs(ledStates, ledManager);
-        UpdateKeyboardStateOnScreens(ledStates, displayManager);
+//        UpdateKeyboardStateOnLEDs(ledStates, ledManager);
+//        UpdateKeyboardStateOnScreens(ledStates, displayManager);
 
-        ResetKeyboardChangdFlags(ledStates);
+//        ResetKeyboardChangdFlags(ledStates);
     }
 
     return 0;
