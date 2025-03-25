@@ -21,16 +21,9 @@ add_executable(ternavka
     configuration/FeedSettings.cpp 
     configuration/StepMotorSettings.cpp 
 
-    ui/MenuSystem.cpp 
-    ui/MenuComponent.cpp
-
-    ui/DialogController.cpp 
-    ui/DialogModel.cpp 
-    ui/DialogView.cpp
-
-    ui/SpeedDialogController.cpp 
-    ui/SpeedDialogModel.cpp 
-    ui/SpeedDialogView.cpp
+    ui/MenuComponent.cpp 
+    ui/DialogComponent.cpp 
+    ui/SystemMenu.cpp 
 
     SystemFacade.cpp
     CurrentTimeManager.cpp

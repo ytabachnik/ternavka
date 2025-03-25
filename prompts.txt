@@ -1,0 +1,22 @@
+***MENU***
+Lets create a menu/dialog system for my device running on Raspberry Pico. It has 8 buttons (B1...B8), 8 LEDs (L1...L8) and three separate screens (S1..S3).
+
+There are the following types of entities exist: Top-Level menu, Submenu, Dialog
+
+A Top-level menu is always displayed on S2 and scrolled left and right by B2 and B3. It contains the following items:
+
+FREE
+EXTERNAL
+STEP
+LIMITS
+SETTINGS
+
+The following item might be attached to each Top-Level menu: Dialog or Submenu.
+
+Each Dialog has "main", "blue" and "green" mode which are controlled in the following way:
+- if item is just selected by B2/B3 buttons - its mode is "main";
+- if B7 (which is connected to blue LED L7) is pressed - the mode is "blue"
+- if B6 (which is connected to green LED L6) is pressed - the mode is "green"
+
+For each Submenu the B7 button works as "Back" (if applicable), the B6 works as "OK" (to go deeper, for example). Submenus might open another Submenus
+or Dialogs.

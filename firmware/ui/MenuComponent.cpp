@@ -1,34 +1,127 @@
 #include "MenuComponent.h"
+#include <iostream>
 
-MenuComponent::MenuComponent(Controller* controller, View* view, Model* model, SystemFacade* facade)
-    : controller(controller),
-      view(view),
-      model(model),
-      facade(facade),
+#include "SystemConsts.h"
 
-      curChild(nullptr),
-      curChildIndex(-1),
-      activeChild(nullptr),
-      activeChildIndex(-1)
+MenuComponent::MenuComponent(const std::string& name) :
+    BaseMenuComponent(name),
+    parent(nullptr), activeSubMenu(nullptr), selectedIndex(0)
 {
 }
 
-Controller* MenuComponent::getController() const 
+// Menu Components are NEVER Terminal.
+bool MenuComponent::isTerminal() const
 {
-    return controller;
+    return false;
 }
 
-View* MenuComponent::getView() const 
+void MenuComponent::addSubMenu(BaseMenuComponent* subMenu) 
 {
-    return view;
+    subMenus.push_back(subMenu);
 }
 
-Model* MenuComponent::getModel() const 
+void MenuComponent::handleKeyStateChanged(int8_t keyIndex)
 {
-    return model;
+    SystemKeyID keyID = static_cast<SystemKeyID>(keyIndex);
+    if (activeSubMenu && !activeSubMenu->isTerminal())
+    {
+        activeSubMenu->handleKeyStateChanged(keyIndex);
+        if (keyID == SystemKeyID::MENU_CANCEL_KEY)
+        {
+            activeSubMenu->onExited();
+            activeSubMenu = nullptr;
+            onEntered(); // Re-enter the current menu
+        }
+
+        return;
+    }
+
+    switch (keyID)
+    {    
+        case SystemKeyID::MENU_PREV_KEY:
+            if (!subMenus.empty()) 
+            {
+                subMenus[selectedIndex]->onDeselected();
+                selectedIndex = (selectedIndex == 0) ? subMenus.size() - 1 : selectedIndex - 1;
+                subMenus[selectedIndex]->onSelected();
+
+                if (subMenus[selectedIndex]->isTerminal())
+                {
+                    activeSubMenu = subMenus[selectedIndex]; // Make the dialog active
+                } else
+                {
+                    activeSubMenu = nullptr;
+                }
+            }
+            break;
+
+        case SystemKeyID::MENU_NEXT_KEY:
+            if (!subMenus.empty()) 
+            {
+                subMenus[selectedIndex]->onDeselected();
+                selectedIndex = (selectedIndex + 1) % subMenus.size();
+                subMenus[selectedIndex]->onSelected();
+
+                if (subMenus[selectedIndex]->isTerminal())
+                {
+                    activeSubMenu = subMenus[selectedIndex]; // Make the dialog active
+                } else {
+                    activeSubMenu = nullptr;
+                }
+            }
+
+            break;
+
+        case SystemKeyID::MENU_OK_KEY:
+            if (!subMenus.empty() && !subMenus[selectedIndex]->isTerminal())
+            {
+                subMenus[selectedIndex]->onEntered();
+                activeSubMenu = subMenus[selectedIndex];
+            }
+            break;
+
+        case SystemKeyID::MENU_CANCEL_KEY:
+            if (parent)
+            {
+                onExited();
+                parent->activeSubMenu = nullptr;
+                parent->onEntered();  // Ensure parent menu is re-entered
+            }
+            break;
+
+        default:
+            break;
+    }
 }
 
-SystemFacade* MenuComponent::getFacade() const
-{
-    return facade;
+void MenuComponent::display() {
+    std::cout << "Menu: " << name << std::endl;
+    if (activeSubMenu) {
+        activeSubMenu->display();
+    } else {
+        for (size_t i = 0; i < subMenus.size(); ++i) {
+            if (i == selectedIndex) {
+                std::cout << "> " << subMenus[i]->getName() << std::endl;
+            } else {
+                std::cout << "  " << subMenus[i]->getName() << std::endl;
+            }
+        }
+    }
+}
+
+// New methods implementations
+void MenuComponent::onEntered() {
+    std::cout << name << " entered." << std::endl;
+}
+
+void MenuComponent::onExited() {
+    std::cout << name << " exited." << std::endl;
+}
+
+void MenuComponent::onSelected() {
+    std::cout << name << " selected." << std::endl;
+}
+
+void MenuComponent::onDeselected() {
+    std::cout << name << " deselected." << std::endl;
 }

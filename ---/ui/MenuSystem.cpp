@@ -5,12 +5,12 @@ MenuSystem::MenuSystem()
     setRoot(nullptr);
 }
 
-MenuSystem::MenuSystem(MenuComponent* root)
+MenuSystem::MenuSystem(BaseMenuComponent* root)
 {
     setRoot(root);
 }
 
-void MenuSystem::setRoot(MenuComponent* root)
+void MenuSystem::setRoot(BaseMenuComponent* root)
 {
     rootMenuComponent = root;
 }

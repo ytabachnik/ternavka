@@ -2,18 +2,18 @@
 #define MENUSYSTEM_H
 
 #include <vector>
-#include "MenuComponent.h"
+#include "BaseMenuComponent.h"
 
 class MenuSystem {
 private:
-    MenuComponent* rootMenuComponent;
+    BaseMenuComponent* rootMenuComponent;
 
 public:
     MenuSystem();
-    MenuSystem(MenuComponent* root);
+    MenuSystem(BaseMenuComponent* root);
 
     // Set the menu root.
-    void setRoot(MenuComponent* root);
+    void setRoot(BaseMenuComponent* root);
 
     // Handle the key state changed.
     void handleKeyStateChanged(int8_t keyIndex)

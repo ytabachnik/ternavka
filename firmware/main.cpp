@@ -11,15 +11,21 @@
 #include "hal/KeyboardManager.h"
 #include "hal/MultiDisplayManager.h"
 
+/*
 #include "ui/MenuSystem.h"
-#include "ui/MenuComponent.h"
+#include "ui/BaseMenuComponent.h"
+#include "ui/SubmenuComponent.h"
 #include "ui/DialogModel.h"
 #include "ui/SpeedDialogModel.h"
 #include "ui/DialogView.h"
 #include "ui/SpeedDialogView.h"
 #include "ui/DialogController.h"
 #include "ui/SpeedDialogController.h"
+*/
 
+#include "ui/SystemMenu.h"
+#include "ui/MenuComponent.h"
+#include "ui/DialogComponent.h"
 
 #include "SystemFacade.h"
 #include "CurrentTimeManager.h"
@@ -202,7 +208,7 @@ void initializeSPI()
 }
 
 // Initialize the menu subsystem.
-void initializeMenuSystem(MenuSystem& menuSystem, SystemFacade& facade);
+void initializeMenu(SystemMenu& systemMenu, SystemFacade& facade);
 
 int main()
 {
@@ -224,9 +230,9 @@ int main()
 
     // System Facade joins all the HAL components together.
     SystemFacade facade(&displayManager, &ledManager, &kybdManager);
-    
-    MenuSystem menuSystem;
-    initializeMenuSystem(menuSystem, facade);
+
+    SystemMenu systemMenu;
+    initializeMenu(systemMenu, facade);
 
     /*
     displayManager.setActiveDisplay(0);
@@ -264,7 +270,7 @@ int main()
         {
             if (kybdManager.isKeyStateChanged(i))
             {
-                menuSystem.handleKeyStateChanged(i);
+                systemMenu.handleKeyStateChanged(i);
             }
         }
 
@@ -277,67 +283,85 @@ int main()
     return 0;
 }
 
-void initializeMenuSystem(MenuSystem& menuSystem, SystemFacade& facade)
+MenuComponent mainMenu("Main Menu");
+MenuComponent subMenu1("Sub Menu 1");
+MenuComponent subMenu2("Sub Menu 2");
+MenuComponent subSubMenu1("Sub Sub Menu 1");
+DialogComponent dialog1("Dialog 1");
+
+void initializeMenu(SystemMenu& systemMenu, SystemFacade& facade)
 {
+
+    mainMenu.addSubMenu(&subMenu1);
+    mainMenu.addSubMenu(&subMenu2);
+    mainMenu.addSubMenu(&dialog1);
+    subMenu1.addSubMenu(&subSubMenu1);
+
+    systemMenu.setActiveMenu(&mainMenu);
+}
+
+/*
+void initializeMenuSystem(MenuSystem& menuSystem, SystemFacade& facade)
+{    
     // Create models
     // Settings - Screen
     DialogModel brightnessDialogModel("Brightness");
     DialogView brightnessDialogView(&brightnessDialogModel);
     DialogController brightnessDialogController(&brightnessDialogModel, &brightnessDialogView);
-    MenuComponent brightnessComponent(&brightnessDialogController, &brightnessDialogView, &brightnessDialogModel, &facade);
+    BaseMenuComponent brightnessComponent(&brightnessDialogController, &brightnessDialogView, &brightnessDialogModel, &facade);
 
     DialogModel contrastDialogModel("Contrast");
     DialogView contrastDialogView(&contrastDialogModel);
     DialogController contrastDialogController(&contrastDialogModel, &contrastDialogView);
-    MenuComponent contrastComponent(&contrastDialogController, &contrastDialogView, &contrastDialogModel, &facade);
+    BaseMenuComponent contrastComponent(&contrastDialogController, &contrastDialogView, &contrastDialogModel, &facade);
 
     // Settings - Connection
     DialogModel usbDialogModel("USB");
     DialogView usbDialogView(&usbDialogModel);
     DialogController usbDialogController(&usbDialogModel, &usbDialogView);
-    MenuComponent usbComponent(&usbDialogController, &usbDialogView, &usbDialogModel, &facade);
+    BaseMenuComponent usbComponent(&usbDialogController, &usbDialogView, &usbDialogModel, &facade);
 
     DialogModel bluetoothDialogModel("Bluetooth");
     DialogView blueToothDialogView(&bluetoothDialogModel);
     DialogController blueToothDialogController(&bluetoothDialogModel, &blueToothDialogView);
-    MenuComponent blueToothComponent(&blueToothDialogController, &blueToothDialogView, &bluetoothDialogModel, &facade);
+    BaseMenuComponent blueToothComponent(&blueToothDialogController, &blueToothDialogView, &bluetoothDialogModel, &facade);
 
     DialogModel wifiDialogModel("wifi");
     DialogView wifiDialogView(&wifiDialogModel);
     DialogController wifiDialogController(&wifiDialogModel, &wifiDialogView);
-    MenuComponent wifiComponent(&wifiDialogController, &wifiDialogView, &wifiDialogModel, &facade);
+    BaseMenuComponent wifiComponent(&wifiDialogController, &wifiDialogView, &wifiDialogModel, &facade);
 
     // Top level
     DialogModel freeDialogModel("FREE");
     DialogView freeDialogView(&freeDialogModel);
     DialogController freeDialogController(&freeDialogModel, &freeDialogView);
-    MenuComponent freeDialogComponent(&freeDialogController, &freeDialogView, &freeDialogModel, &facade);
+    BaseMenuComponent freeDialogComponent(&freeDialogController, &freeDialogView, &freeDialogModel, &facade);
 
     DialogModel stepDialogModel("STEP");
     DialogView stepDialogView(&stepDialogModel);
     DialogController stepDialogController(&stepDialogModel, &stepDialogView);
-    MenuComponent stepDialogComponent(&stepDialogController, &stepDialogView, &stepDialogModel, &facade);
+    BaseMenuComponent stepDialogComponent(&stepDialogController, &stepDialogView, &stepDialogModel, &facade);
 
     DialogModel settingsSubmenuModel("SETTINGS");
     DialogView settingsSubmenuView(&settingsSubmenuModel);
     DialogController settingsSubmenuController(&settingsSubmenuModel, &settingsSubmenuView);
-    MenuComponent settingsSubmenuComponent(&settingsSubmenuController, &settingsSubmenuView, &settingsSubmenuModel, &facade);
+    BaseMenuComponent settingsSubmenuComponent(&settingsSubmenuController, &settingsSubmenuView, &settingsSubmenuModel, &facade);
 
     DialogModel displaySubmenuModel("DISPLAY");
     DialogView displaySubmenuView(&displaySubmenuModel);
     DialogController displaySubmenuController(&displaySubmenuModel, &displaySubmenuView);
-    MenuComponent displaySubmenuComponent(&displaySubmenuController, &displaySubmenuView, &displaySubmenuModel, &facade);
+    SubmenuComponent displaySubmenuComponent(&displaySubmenuController, &displaySubmenuView, &displaySubmenuModel, &facade);
 
     DialogModel connectionSubmenuModel("connection");
     DialogView connectionSubmenuView(&connectionSubmenuModel);
     DialogController connectionSubmenuController(&connectionSubmenuModel, &connectionSubmenuView);
-    MenuComponent connectionSubmenuComponent(&connectionSubmenuController, &connectionSubmenuView, &connectionSubmenuModel, &facade);
+    SubmenuComponent connectionSubmenuComponent(&connectionSubmenuController, &connectionSubmenuView, &connectionSubmenuModel, &facade);
 
     // Build the hierarchy.
     DialogModel rootModel("root");
     DialogView rootView(&rootModel);
     DialogController rootController(&rootModel, &rootView);
-    MenuComponent rootComponent(&rootController, &rootView, &rootModel, &facade);
+    SubmenuComponent rootComponent(&rootController, &rootView, &rootModel, &facade);
 
     displaySubmenuComponent.addChildren(&brightnessComponent);
     displaySubmenuComponent.addChildren(&contrastComponent);
@@ -357,3 +381,5 @@ void initializeMenuSystem(MenuSystem& menuSystem, SystemFacade& facade)
     // Create menu system
     menuSystem.setRoot(&rootComponent);
 }
+
+*/
