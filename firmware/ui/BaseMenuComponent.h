@@ -1,19 +1,23 @@
 #ifndef BASE_MENU_COMPONENT_H
 #define BASE_MENU_COMPONENT_H
 
-#include <pico/stdlib.h>
+class BaseModel;
+class BaseView;
+
 #include <string>
 
 class BaseMenuComponent
 {
 public:
-    BaseMenuComponent(const std::string& name)
+    BaseMenuComponent(const std::string& name, BaseModel* model, BaseView* view)
+        : name(name), model(model), view(view)
     {
-        this->name = name;
     }
 
     virtual void handleKeyStateChanged(int8_t keyIndex) = 0;
     virtual void display() = 0;
+    virtual void update();
+
     virtual ~BaseMenuComponent() = default;
 
     // Method to distinguish between menus and dialogs
@@ -29,6 +33,8 @@ public:
 
 protected:
     std::string name;
+    BaseModel* model;
+    BaseView* view;
 };
 
 #endif // BASE_MENU_COMPONENT_H

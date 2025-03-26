@@ -2,10 +2,9 @@
 #include <iostream>
 
 #include "SystemConsts.h"
-
-MenuComponent::MenuComponent(const std::string& name) :
-    BaseMenuComponent(name),
-    parent(nullptr), activeSubMenu(nullptr), selectedIndex(0)
+MenuComponent::MenuComponent(const std::string& name, BaseModel* model, BaseView* view) :
+    BaseMenuComponent(name, model, view), parent(nullptr),
+    activeSubMenu(nullptr), selectedIndex(0)
 {
 }
 
@@ -15,7 +14,7 @@ bool MenuComponent::isTerminal() const
     return false;
 }
 
-void MenuComponent::addSubMenu(BaseMenuComponent* subMenu) 
+void MenuComponent::addSubMenu(BaseMenuComponent* subMenu)
 {
     subMenus.push_back(subMenu);
 }
@@ -127,7 +126,8 @@ void MenuComponent::display() {
     }
 }
 
-// New methods implementations
+
+// Override virtual methods
 void MenuComponent::onEntered()
 {
     std::cout << name << " entered." << std::endl;

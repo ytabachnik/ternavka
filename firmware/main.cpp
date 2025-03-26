@@ -24,7 +24,11 @@
 */
 
 #include "ui/SystemMenu.h"
+#include "ui/MenuModel.h"
+#include "ui/MenuView.h"
 #include "ui/MenuComponent.h"
+#include "ui/DialogModel.h"
+#include "ui/DialogView.h"
 #include "ui/DialogComponent.h"
 
 #include "SystemFacade.h"
@@ -210,6 +214,21 @@ void initializeSPI()
 // Initialize the menu subsystem.
 void initializeMenu(SystemMenu& systemMenu, SystemFacade& facade);
 
+MenuModel menuModel(nullptr);
+MenuView menuView(&menuModel, nullptr);
+
+DialogModel dialogModel(nullptr);
+DialogView dialogView(&dialogModel, nullptr);
+
+MenuComponent mainMenu("Main Menu", &menuModel, &menuView);
+
+MenuComponent subMenu1("Sub Menu 1", &menuModel, &menuView);
+MenuComponent subMenu2("Sub Menu 2", &menuModel, &menuView);
+MenuComponent subSubMenu1("Sub Sub Menu 1", &menuModel, &menuView);
+MenuComponent subSubMenu2("Sub Sub Menu 2", &menuModel, &menuView);
+DialogComponent dialog1("Dialog 1", &dialogModel, &dialogView);
+DialogComponent dialog2("SubDialog 2", &dialogModel, &dialogView);
+
 int main()
 {
     stdio_init_all();
@@ -231,7 +250,7 @@ int main()
     // System Facade joins all the HAL components together.
     SystemFacade facade(&displayManager, &ledManager, &kybdManager);
 
-    SystemMenu systemMenu;
+    SystemMenu systemMenu(&menuModel, &menuView);
     initializeMenu(systemMenu, facade);
 
     /*
@@ -282,14 +301,6 @@ int main()
 
     return 0;
 }
-
-MenuComponent mainMenu("Main Menu");
-MenuComponent subMenu1("Sub Menu 1");
-MenuComponent subMenu2("Sub Menu 2");
-MenuComponent subSubMenu1("Sub Sub Menu 1");
-MenuComponent subSubMenu2("Sub Sub Menu 2");
-DialogComponent dialog1("Dialog 1");
-DialogComponent dialog2("SubDialog 2");
 
 void initializeMenu(SystemMenu& systemMenu, SystemFacade& facade)
 {

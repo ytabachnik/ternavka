@@ -3,13 +3,17 @@
 
 #include "MenuComponent.h"
 
-class SystemMenu {
+class SystemMenu : public MenuComponent {
 public:
-    SystemMenu();
+    SystemMenu(BaseModel* model, BaseView* view);
     void setActiveMenu(MenuComponent* menu);
-
     void handleKeyStateChanged(int8_t keyIndex);
     void display();
+    void update();
+
+    // Override virtual methods for scrolling
+    void onAttemptToScrollBeforeFirstMenuItem() override;
+    void onAttemptToScrollAfterLastMenuItem() override;
 
 private:
     MenuComponent* activeMenu;

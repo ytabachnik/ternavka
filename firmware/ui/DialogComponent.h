@@ -7,17 +7,17 @@
 class DialogComponent : public BaseMenuComponent
 {
 public:
-    DialogComponent(const std::string& name);
+    DialogComponent(const std::string& name, BaseModel* model, BaseView* view);
     void handleKeyStateChanged(int8_t keyIndex) override;
     void display() override;
 
     // Method to distinguish between menus and dialogs
     bool isTerminal() const override;
 
-    // New methods
-    virtual void onEntered();
-    virtual void onSelected();
-    virtual void onDeselected();
+        // Override virtual methods
+        void onEntered() override;
+        void onSelected() override;
+        void onDeselected() override;
 };
 
 #endif // DIALOG_COMPONENT_H

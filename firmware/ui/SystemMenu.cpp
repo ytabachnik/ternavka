@@ -1,6 +1,10 @@
 #include "SystemMenu.h"
+#include <iostream>
 
-SystemMenu::SystemMenu() : activeMenu(nullptr) {}
+SystemMenu::SystemMenu(BaseModel* model, BaseView* view)
+    : MenuComponent("System Menu", model, view), activeMenu(nullptr)
+{
+}
 
 void SystemMenu::setActiveMenu(MenuComponent* menu)
 {
@@ -20,4 +24,18 @@ void SystemMenu::display() {
     if (activeMenu) {
         activeMenu->display();
     }
+}
+
+void SystemMenu::update() {
+    if (activeMenu) {
+        activeMenu->update();
+    }
+}
+
+void SystemMenu::onAttemptToScrollBeforeFirstMenuItem() {
+    std::cout << "Attempted to scroll before the first menu item." << std::endl;
+}
+
+void SystemMenu::onAttemptToScrollAfterLastMenuItem() {
+    std::cout << "Attempted to scroll after the last menu item." << std::endl;
 }

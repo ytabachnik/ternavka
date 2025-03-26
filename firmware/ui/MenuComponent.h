@@ -7,20 +7,19 @@
 
 class MenuComponent : public BaseMenuComponent {
 public:
-    MenuComponent(const std::string& name);
+    MenuComponent(const std::string& name, BaseModel* model, BaseView* view);
     void addSubMenu(BaseMenuComponent* subMenu);
-
     void handleKeyStateChanged(int8_t keyIndex) override;
-    void display();
+    void display() override;
 
     // Method to distinguish between menus and dialogs
     bool isTerminal() const override;
 
-    // New methods
-    virtual void onEntered();
-    virtual void onExited();
-    virtual void onSelected();
-    virtual void onDeselected();
+    // Override virtual methods
+    void onEntered() override;
+    void onExited() override;
+    void onSelected() override;
+    void onDeselected() override;
 
     // Handling of the "scroll to left/scroll too right" methods.
     virtual void onAttemptToScrollBeforeFirstMenuItem();

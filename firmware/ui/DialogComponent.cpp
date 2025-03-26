@@ -1,7 +1,10 @@
 #include "DialogComponent.h"
 #include <iostream>
 
-DialogComponent::DialogComponent(const std::string& name) : BaseMenuComponent(name) {}
+DialogComponent::DialogComponent(const std::string& name, BaseModel* model, BaseView* view)
+    : BaseMenuComponent(name, model, view)
+{
+}
 
 void DialogComponent::handleKeyStateChanged(int8_t keyIndex)
 {
@@ -18,7 +21,7 @@ void DialogComponent::display() {
     std::cout << "Dialog: " << name << std::endl;
 }
 
-// New methods implementations
+// Override virtual methods
 void DialogComponent::onEntered() {
     std::cout << name << " dialog entered." << std::endl;
 }

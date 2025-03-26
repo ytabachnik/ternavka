@@ -21,6 +21,8 @@ add_executable(ternavka
     configuration/FeedSettings.cpp 
     configuration/StepMotorSettings.cpp 
 
+    ui/BaseMenuComponent.cpp 
+    ui/BaseView.cpp 
     ui/MenuComponent.cpp 
     ui/DialogComponent.cpp 
     ui/SystemMenu.cpp 
