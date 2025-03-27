@@ -1,11 +1,14 @@
 #ifndef MENU_MODEL_H
 #define MENU_MODEL_H
 
-#include "BaseModel.h"
+#include "BaseUIModel.h"
 
-class MenuModel : public BaseModel {
+class MenuModel : public BaseUIModel
+{
 public:
-    MenuModel(BaseController* controller) : BaseModel(controller) {}
+    MenuModel() : BaseUIModel()
+    {
+    }
 
     // Add specific data and methods for the menu model
 };

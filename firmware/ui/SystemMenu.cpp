@@ -1,12 +1,12 @@
 #include "SystemMenu.h"
 #include <iostream>
 
-SystemMenu::SystemMenu(BaseModel* model, BaseView* view)
-    : MenuComponent("System Menu", model, view), activeMenu(nullptr)
+SystemMenu::SystemMenu(BaseUIModel* model, BaseUIView* view)
+    : MenuController("System Menu", model, view), activeMenu(nullptr)
 {
 }
 
-void SystemMenu::setActiveMenu(MenuComponent* menu)
+void SystemMenu::setActiveMenu(MenuController* menu)
 {
     activeMenu = menu;
 }

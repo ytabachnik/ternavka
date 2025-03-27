@@ -1,14 +1,16 @@
-#ifndef MENU_COMPONENT_H
-#define MENU_COMPONENT_H
+#ifndef MENU_CONTROLLER_H
+#define MENU_CONTROLLER_H
 
-#include "BaseMenuComponent.h"
+#include "BaseUIController.h"
 #include <vector>
 #include <string>
 
-class MenuComponent : public BaseMenuComponent {
+class MenuController : public BaseUIController {
 public:
-    MenuComponent(const std::string& name, BaseModel* model, BaseView* view);
-    void addSubMenu(BaseMenuComponent* subMenu);
+    MenuController(const std::string& name, BaseUIModel* model, BaseUIView* view);
+    
+    void addSubcontroller(BaseUIController* subController);
+
     void handleKeyStateChanged(int8_t keyIndex) override;
     void display() override;
 
@@ -26,10 +28,10 @@ public:
     virtual void onAttemptToScrollAfterLastMenuItem();
 
 private:
-    MenuComponent* parent;
-    std::vector<BaseMenuComponent*> subMenus;
-    BaseMenuComponent* activeSubMenu;
+    MenuController* parent;
+    std::vector<BaseUIController*> subControllers;
+    BaseUIController* activeSubcontroller;
     size_t selectedIndex;
 };
 
-#endif // MENU_COMPONENT_H
+#endif // MENU_CONTROLLER_H

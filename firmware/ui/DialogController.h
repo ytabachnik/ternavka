@@ -1,13 +1,13 @@
 #ifndef DIALOG_COMPONENT_H
 #define DIALOG_COMPONENT_H
 
-#include "BaseMenuComponent.h"
+#include "BaseUIController.h"
 #include <string>
 
-class DialogComponent : public BaseMenuComponent
+class DialogController : public BaseUIController
 {
 public:
-    DialogComponent(const std::string& name, BaseModel* model, BaseView* view);
+    DialogController(const std::string& name, BaseUIModel* model, BaseUIView* view);
     void handleKeyStateChanged(int8_t keyIndex) override;
     void display() override;
 

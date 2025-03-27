@@ -1,7 +1,7 @@
-#include "BaseView.h"
-#include "BaseModel.h"
+#include "BaseUIView.h"
+#include "BaseUIModel.h"
 
-void BaseView::update()
+void BaseUIView::update()
 {
     if (model->isChanged())
     {

@@ -1,11 +1,14 @@
 #ifndef DIALOG_MODEL_H
 #define DIALOG_MODEL_H
 
-#include "BaseModel.h"
+#include "BaseUIModel.h"
 
-class DialogModel : public BaseModel {
+class DialogModel : public BaseUIModel
+{
 public:
-    DialogModel(BaseController* controller) : BaseModel(controller) {}
+    DialogModel() : BaseUIModel()
+    {
+    }
 
     // Add specific data and methods for the dialog model
 };

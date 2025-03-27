@@ -1,15 +1,15 @@
-#ifndef BASE_MENU_COMPONENT_H
-#define BASE_MENU_COMPONENT_H
+#ifndef BASE_UI_CONTROLLER_H
+#define BASE_UI_CONTROLLER_H
 
-class BaseModel;
-class BaseView;
+class BaseUIModel;
+class BaseUIView;
 
 #include <string>
 
-class BaseMenuComponent
+class BaseUIController
 {
 public:
-    BaseMenuComponent(const std::string& name, BaseModel* model, BaseView* view)
+    BaseUIController(const std::string& name, BaseUIModel* model, BaseUIView* view)
         : name(name), model(model), view(view)
     {
     }
@@ -18,7 +18,7 @@ public:
     virtual void display() = 0;
     virtual void update();
 
-    virtual ~BaseMenuComponent() = default;
+    virtual ~BaseUIController() = default;
 
     // Method to distinguish between menus and dialogs
     virtual bool isTerminal() const = 0;
@@ -33,8 +33,8 @@ public:
 
 protected:
     std::string name;
-    BaseModel* model;
-    BaseView* view;
+    BaseUIModel* model;
+    BaseUIView* view;
 };
 
 #endif // BASE_MENU_COMPONENT_H

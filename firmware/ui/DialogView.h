@@ -2,14 +2,16 @@
 #define DIALOG_VIEW_H
 
 #include <iostream>
-#include "BaseView.h"
+#include "BaseUIView.h"
 
-class DialogView : public BaseView {
+class DialogView : public BaseUIView {
 public:
-    DialogView(BaseModel* model, BaseController* controller)
-        : BaseView(model, controller) {}
+    DialogView(BaseUIModel* model) : BaseUIView(model)
+    {
+    }
 
-    void render() override {
+    void render() override
+    {
         // Implement rendering logic for the dialog view
         std::cout << "Rendering Dialog View" << std::endl;
     }

@@ -26,10 +26,13 @@
 #include "ui/SystemMenu.h"
 #include "ui/MenuModel.h"
 #include "ui/MenuView.h"
-#include "ui/MenuComponent.h"
+#include "ui/MenuController.h"
 #include "ui/DialogModel.h"
 #include "ui/DialogView.h"
-#include "ui/DialogComponent.h"
+#include "ui/DialogController.h"
+
+#include "ui/concrete/FreeDialogController.h"
+#include "ui/concrete/FreeDialogModel.h"
 
 #include "SystemFacade.h"
 #include "CurrentTimeManager.h"
@@ -214,20 +217,24 @@ void initializeSPI()
 // Initialize the menu subsystem.
 void initializeMenu(SystemMenu& systemMenu, SystemFacade& facade);
 
-MenuModel menuModel(nullptr);
-MenuView menuView(&menuModel, nullptr);
+MenuModel menuModel;
+MenuView menuView(&menuModel);
 
-DialogModel dialogModel(nullptr);
-DialogView dialogView(&dialogModel, nullptr);
+DialogModel dialogModel;
+DialogView dialogView(&dialogModel);
 
-MenuComponent mainMenu("Main Menu", &menuModel, &menuView);
+MenuController mainMenu("Main Menu", &menuModel, &menuView);
 
-MenuComponent subMenu1("Sub Menu 1", &menuModel, &menuView);
-MenuComponent subMenu2("Sub Menu 2", &menuModel, &menuView);
-MenuComponent subSubMenu1("Sub Sub Menu 1", &menuModel, &menuView);
-MenuComponent subSubMenu2("Sub Sub Menu 2", &menuModel, &menuView);
-DialogComponent dialog1("Dialog 1", &dialogModel, &dialogView);
-DialogComponent dialog2("SubDialog 2", &dialogModel, &dialogView);
+MenuController subMenu1("Sub Menu 1", &menuModel, &menuView);
+MenuController subMenu2("Sub Menu 2", &menuModel, &menuView);
+MenuController subSubMenu1("Sub Sub Menu 1", &menuModel, &menuView);
+MenuController subSubMenu2("Sub Sub Menu 2", &menuModel, &menuView);
+
+FreeDialogModel freeDialogModel;
+DialogView freeDialogView(&dialogModel);
+
+FreeDialogController freeDialogController("FREE", &freeDialogModel, &freeDialogView);
+DialogController dialog2("SubDialog 2", &dialogModel, &dialogView);
 
 int main()
 {
@@ -304,14 +311,15 @@ int main()
 
 void initializeMenu(SystemMenu& systemMenu, SystemFacade& facade)
 {
+    freeDialogController.setFacade(&facade);
+    mainMenu.addSubcontroller(&freeDialogController);
 
-    mainMenu.addSubMenu(&subMenu1);
-    mainMenu.addSubMenu(&subMenu2);
-    mainMenu.addSubMenu(&dialog1);
+    mainMenu.addSubcontroller(&subMenu1);
+    mainMenu.addSubcontroller(&subMenu2);
 
-    subMenu1.addSubMenu(&subSubMenu1);
-    subMenu1.addSubMenu(&subSubMenu2);
-    subMenu1.addSubMenu(&dialog2);
+    subMenu1.addSubcontroller(&subSubMenu1);
+    subMenu1.addSubcontroller(&subSubMenu2);
+    subMenu1.addSubcontroller(&dialog2);
 
     systemMenu.setActiveMenu(&mainMenu);
 }

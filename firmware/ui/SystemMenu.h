@@ -1,12 +1,13 @@
 #ifndef SYSTEM_MENU_H
 #define SYSTEM_MENU_H
 
-#include "MenuComponent.h"
+#include "MenuController.h"
 
-class SystemMenu : public MenuComponent {
+class SystemMenu : public MenuController
+{
 public:
-    SystemMenu(BaseModel* model, BaseView* view);
-    void setActiveMenu(MenuComponent* menu);
+    SystemMenu(BaseUIModel* model, BaseUIView* view);
+    void setActiveMenu(MenuController* menu);
     void handleKeyStateChanged(int8_t keyIndex);
     void display();
     void update();
@@ -16,7 +17,7 @@ public:
     void onAttemptToScrollAfterLastMenuItem() override;
 
 private:
-    MenuComponent* activeMenu;
+    MenuController* activeMenu;
 };
 
 #endif // SYSTEM_MENU_H

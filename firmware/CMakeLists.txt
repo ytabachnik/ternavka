@@ -21,11 +21,16 @@ add_executable(ternavka
     configuration/FeedSettings.cpp 
     configuration/StepMotorSettings.cpp 
 
-    ui/BaseMenuComponent.cpp 
-    ui/BaseView.cpp 
-    ui/MenuComponent.cpp 
-    ui/DialogComponent.cpp 
+    ui/BaseUIController.cpp 
+    ui/BaseUIView.cpp 
+    ui/MenuController.cpp 
+    ui/DialogController.cpp 
     ui/SystemMenu.cpp 
+
+    ui/concrete/BaseCrossFeedDialogController.cpp
+    ui/concrete/BaseCrossFeedMenuController.cpp
+    ui/concrete/FreeDialogController.cpp
+#   ui/concrete/FreeDialogView.cpp
 
     SystemFacade.cpp
     CurrentTimeManager.cpp
@@ -37,8 +42,10 @@ target_include_directories(ternavka PRIVATE
     ${CMAKE_CURRENT_LIST_DIR}
      hal
      lowlevel
+     common
      configuration
      ui
+     ui/concrete
      libs/pico-ssd1306
 )
 

@@ -1,13 +1,16 @@
 #ifndef MENU_VIEW_H
 #define MENU_VIEW_H
 
-#include "BaseView.h"
+#include "BaseUIView.h"
 #include <iostream>
 
-class MenuView : public BaseView {
+class MenuView : public BaseUIView
+{
 public:
-    MenuView(BaseModel* model, BaseController* controller)
-        : BaseView(model, controller) {}
+    MenuView(BaseUIModel* model) :
+        BaseUIView(model)
+        {
+        }
 
     void render() override {
         // Implement rendering logic for the menu view
