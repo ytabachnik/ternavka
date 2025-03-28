@@ -34,90 +34,45 @@ void MenuController::handleKeyStateChanged(uint8_t keyIndex)
 
         return;
     }
-
-    // Send the key state changed flag to the active subcontroller, if any.
-    if (activeSubcontroller)
+    else if (activeSubcontroller && activeSubcontroller->isTerminal())
     {
+        // Send the key state changed flag to the active subcontroller, if any.
         activeSubcontroller->handleKeyStateChanged(keyIndex);
     }
 
     switch (keyID)
     {
         case SystemKeyID::MENU_PREV_KEY:
-            if (!subControllers.empty()) 
-            {
-                if (selectedIndex == 0) 
-                {
-                    onAttemptToScrollBeforeFirstMenuItem();
-                }
-                else
-                {
-                    subControllers[selectedIndex]->onDeselected();
-                    selectedIndex --;
-                    subControllers[selectedIndex]->onSelected();
-
-                    if (subControllers[selectedIndex]->isTerminal())
-                    {
-                        activeSubcontroller = subControllers[selectedIndex]; // Make the dialog active
-                    }
-                    else
-                    {
-                        activeSubcontroller = nullptr;
-                    }
-                }
-            }
-
+        {
+            prevKeyStateChanged();
             break;
+        }
 
         case SystemKeyID::MENU_NEXT_KEY:
-            if (!subControllers.empty()) 
-            {
-                if (selectedIndex == subControllers.size() - 1) 
-                {
-                    onAttemptToScrollAfterLastMenuItem();
-                }
-                else
-                {
-                    subControllers[selectedIndex]->onDeselected();
-                    selectedIndex ++;
-                    subControllers[selectedIndex]->onSelected();
-
-                    if (subControllers[selectedIndex]->isTerminal())
-                    {
-                        activeSubcontroller = subControllers[selectedIndex]; // Make the dialog active
-                    }
-                    else
-                    {
-                        activeSubcontroller = nullptr;
-                    }
-                }
-            }
-
+        {
+            nextKeyStateChanged();
             break;
+        }
 
         case SystemKeyID::MENU_OK_KEY:
-            if (!subControllers.empty() && !subControllers[selectedIndex]->isTerminal())
-            {
-                subControllers[selectedIndex]->onEntered();
-                activeSubcontroller = subControllers[selectedIndex];
-            }
+        {
+            OKKeyStateChanged();
             break;
+        }
 
         case SystemKeyID::MENU_CANCEL_KEY:
-            if (parent)
-            {
-                onExited();
-                parent->activeSubcontroller = nullptr;
-                parent->onEntered();  // Ensure parent menu is re-entered
-            }
+        {
+            cancelKeyStateChanged();
             break;
+        }
 
         default:
             break;
     }
 }
 
-void MenuController::display() {
+void MenuController::display()
+{
     std::cout << "Menu: " << name << std::endl;
     if (activeSubcontroller)
     {
@@ -133,6 +88,83 @@ void MenuController::display() {
     }
 }
 
+// "Prev" key state is changed.
+bool MenuController::prevKeyStateChanged()
+{
+    if (subControllers.empty()) return false;
+
+    if (selectedIndex == 0)
+    {
+        // No way to continue scrolling left.
+        onAttemptToScrollBeforeFirstMenuItem();
+        return false;
+    }
+
+    subControllers[selectedIndex]->onDeselected();
+    selectedIndex --;
+    subControllers[selectedIndex]->onSelected();
+
+    selectActiveSubcontrollerIfTerminal();
+    return true;
+}
+
+// "Next" key state is changed.
+bool MenuController::nextKeyStateChanged()
+{
+    if (subControllers.empty()) return false;
+
+    if (selectedIndex == subControllers.size() - 1)
+    {
+        onAttemptToScrollAfterLastMenuItem();
+        return false;
+    }
+
+    subControllers[selectedIndex]->onDeselected();
+    selectedIndex++;
+    subControllers[selectedIndex]->onSelected();
+
+    selectActiveSubcontrollerIfTerminal();
+    return true;
+}
+
+bool MenuController::OKKeyStateChanged()
+{
+    if (!subControllers.empty() && !subControllers[selectedIndex]->isTerminal())
+    {
+        subControllers[selectedIndex]->onEntered();
+        activeSubcontroller = subControllers[selectedIndex];
+        return true;
+    }
+
+    return false;
+}
+
+bool MenuController::cancelKeyStateChanged()
+{
+    if (parent)
+    {
+        onExited();
+        parent->activeSubcontroller = nullptr;
+        parent->onEntered(); // Ensure parent menu is re-entered
+
+        return true;
+    }
+
+    return false;
+}
+
+/// @brief Select the subcontroller as active, if it is terminal (dialog)
+void MenuController::selectActiveSubcontrollerIfTerminal()
+{
+    if (subControllers[selectedIndex]->isTerminal())
+    {
+        activeSubcontroller = subControllers[selectedIndex]; // Make the dialog active
+    }
+    else
+    {
+        activeSubcontroller = nullptr;
+    }
+}
 
 // Override virtual methods
 void MenuController::onEntered()

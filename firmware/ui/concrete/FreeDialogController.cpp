@@ -14,6 +14,16 @@ FreeDialogModel* FreeDialogController::getModel()
     return static_cast<FreeDialogModel*>(model);
 }
 
+void FreeDialogController::onSelected()
+{
+    // Needed to show the name of the current mode.
+    getModel()->setSectionChanged((int)SystemDisplayID::CENTER_DISPLAY);
+}
+
+void FreeDialogController::onDeselected()
+{
+}
+
 void FreeDialogController::handleKeyStateChanged(uint8_t keyIndex)
 {
     BaseCrossFeedDialogController::handleKeyStateChanged(keyIndex);

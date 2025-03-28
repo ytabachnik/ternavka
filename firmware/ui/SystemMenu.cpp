@@ -8,7 +8,17 @@ SystemMenu::SystemMenu(BaseUIModel* model, BaseUIView* view)
 
 void SystemMenu::setActiveMenu(MenuController* menu)
 {
+    if (activeMenu)
+    {
+        activeMenu->onDeselected();
+    }
+
     activeMenu = menu;
+
+    if (activeMenu)
+    {
+        activeMenu->onSelected();
+    }
 }
 
 void SystemMenu::handleKeyStateChanged(uint8_t keyIndex)

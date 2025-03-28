@@ -11,6 +11,9 @@ public:
     FreeDialogController(const std::string& name, BaseUIModel* model, BaseUIView* view);
     void handleKeyStateChanged(uint8_t keyIndex) override;
 
+    void onSelected() override;
+    void onDeselected() override;
+
 protected:
     // Access to the proper model type.
     FreeDialogModel* getModel();

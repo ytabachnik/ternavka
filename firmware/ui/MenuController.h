@@ -37,6 +37,17 @@ public:
     virtual void onAttemptToScrollBeforeFirstMenuItem();
     virtual void onAttemptToScrollAfterLastMenuItem();
 
+protected:
+    // Key state changed handlers.
+    // "Prev" key state is changed.
+    bool prevKeyStateChanged();
+    bool nextKeyStateChanged();
+    bool OKKeyStateChanged();
+    bool cancelKeyStateChanged();
+
+    // Select active Subcontrol as Terminal.
+    void selectActiveSubcontrollerIfTerminal();
+
 private:
     MenuController* parent;
     std::vector<BaseUIController*> subControllers;

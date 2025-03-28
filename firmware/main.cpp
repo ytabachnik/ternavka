@@ -312,6 +312,7 @@ void initializeMenu(SystemMenu& systemMenu, SystemFacade& facade)
     subMenu1.addSubcontroller(&subSubMenu2);
     subMenu1.addSubcontroller(&dialog2);
 
+    //mainMenu.
     systemMenu.setActiveMenu(&mainMenu);
 }
 
