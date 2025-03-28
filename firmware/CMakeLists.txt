@@ -28,8 +28,9 @@ add_executable(ternavka
 
     ui/concrete/BaseCrossFeedDialogController.cpp
     ui/concrete/BaseCrossFeedMenuController.cpp
+
     ui/concrete/FreeDialogController.cpp
-#   ui/concrete/FreeDialogView.cpp
+    ui/concrete/FreeDialogView.cpp
 
     SystemFacade.cpp
     CurrentTimeManager.cpp

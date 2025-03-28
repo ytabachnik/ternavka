@@ -1,17 +1,20 @@
 #include "MultiDisplayManager.h"
 #include "ssd1306.h"
 
-MultiDisplayManager::MultiDisplayManager(TCA9548A& tca, uint16_t width, uint16_t height, uint8_t address, i2c_inst_t* i2c_instance)
-    : _tca(tca), _currentChannel(0) {
-    for (int i = 0; i < MAX_DISPLAYS; ++i)
+MultiDisplayManager::MultiDisplayManager(TCA9548A& tca, uint8_t count, uint16_t width,
+     uint16_t height, uint8_t address, i2c_inst_t* i2c_instance)
+    : _tca(tca), _channelsCount(count), _currentChannel(0)
+{
+    for (int i = 0; i < _channelsCount; ++i)
     {
         _displays[i].external_vcc = false; // or the display will show nothing.
         ssd1306_init(&_displays[i], width, height, address, i2c_instance);
     }
 }
 
-void MultiDisplayManager::setActiveDisplay(uint8_t channel) {
-    if (channel >= MAX_DISPLAYS) return;
+void MultiDisplayManager::setActiveDisplay(uint8_t channel) 
+{
+    if (channel >= _channelsCount) return;
     _tca.selectChannel(channel);
     _currentChannel = channel;
 

@@ -5,16 +5,11 @@
 #include <iostream>
 #include "BaseUIView.h"
 
-class DialogView : public BaseUIView {
+class DialogView : public BaseUIView
+{
 public:
     DialogView(BaseUIModel* model) : BaseUIView(model)
     {
-    }
-
-    void render(uint8_t sectionIndex) override
-    {
-        // Implement rendering logic for the dialog view
-        std::cout << "Rendering Dialog View Section " << sectionIndex << std::endl;
     }
 };
 

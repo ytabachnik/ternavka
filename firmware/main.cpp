@@ -53,6 +53,7 @@
 
 const int LEDS_COUNT = 8;
 const int KEYS_COUNT = 8;
+const int DISPLAYS_COUNT = 3;
 
 // Screens-specific info.
 const int SCREEN_WIDTH = 128;
@@ -237,7 +238,8 @@ int main()
     KeyboardManager kybdManager(mcp23s17, true, KEYS_COUNT);
     LEDManager ledManager(mcp23s17, false, LEDS_COUNT);
 
-    MultiDisplayManager displayManager(i2cExtender, SCREEN_WIDTH, SCREEN_HEIGHT,
+    MultiDisplayManager displayManager(i2cExtender, DISPLAYS_COUNT,
+        SCREEN_WIDTH, SCREEN_HEIGHT,
         DISPLAY_DEFAULT_ADDR, DISPLAY_I2C_PORT);
 
     // System Facade joins all the HAL components together.
@@ -246,12 +248,12 @@ int main()
     MenuController systemMenu("Main Menu", &menuModel, &menuView);
     initializeMenu(systemMenu, facade);
 
+    /*
     displayManager.setActiveDisplay(0);
     displayManager.clear();
     displayManager.drawStringCentered(10, 1, "MAUUU");
     displayManager.show();
 
-    /*
     displayManager.setActiveDisplay(1);
     displayManager.clear();
     displayManager.drawStringCentered(10, 2, "MRRR");
@@ -262,7 +264,7 @@ int main()
     displayManager.drawStringCentered(10, 3, "MIII");
     displayManager.show();
     */
-
+   
     LEDState ledStates[LEDS_COUNT];
     for (int8_t i = 0; i < KEYS_COUNT; i ++)
     {

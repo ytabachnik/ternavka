@@ -8,7 +8,9 @@
 
 class MultiDisplayManager {
 public:
-    MultiDisplayManager(TCA9548A& tca, uint16_t width, uint16_t height, uint8_t address, i2c_inst_t* i2c_instance);
+    MultiDisplayManager(TCA9548A& tca, uint8_t count, uint16_t width, uint16_t height,
+        uint8_t address, i2c_inst_t* i2c_instance);
+
     void setActiveDisplay(uint8_t channel);
     void deinit();
     void powerOff();
@@ -35,6 +37,8 @@ public:
 private:
     TCA9548A& _tca;
     ssd1306_t _displays[MAX_DISPLAYS];
+
+    uint8_t _channelsCount;
     uint8_t _currentChannel;
 };
 

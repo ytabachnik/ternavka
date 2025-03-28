@@ -2,7 +2,7 @@
 #define _BASE_CROSS_FEED_DIALOG_VIEW_H_
 
 #include <iostream>
-#include "BaseUIView.h"
+#include "DialogView.h"
 #include "SystemFacade.h"
 
 class BaseCrossFeedDialogView : public DialogView

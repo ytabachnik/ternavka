@@ -19,4 +19,4 @@ protected:
     FreeDialogModel* getModel();
 };
 
-#endif // BASE_CROSS_FEED_DIALOG_COMPONENT_H
+#endif // FREE_DIALOG_CONTROLLER_H
