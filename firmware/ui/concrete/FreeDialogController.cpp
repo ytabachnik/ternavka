@@ -24,20 +24,19 @@ void FreeDialogController::onDeselected()
 {
 }
 
-void FreeDialogController::handleKeyStateChanged(uint8_t keyIndex)
+void FreeDialogController::handleKeyStateChanged(KeyboardManager::KeyID keyID)
 {
-    BaseCrossFeedDialogController::handleKeyStateChanged(keyIndex);
+    BaseCrossFeedDialogController::handleKeyStateChanged(keyID);
 
     // Rights buttons are responsible for the actual position.
     // Left buttons are responsible for Encoder Multiplier.
-    SystemKeyID keyID = static_cast<SystemKeyID>(keyIndex);
     switch (keyID)
     {
-        case SystemKeyID::LEFT_UP_KEY: getModel()->setNextEncoderMultiplier(); break;
-        case SystemKeyID::LEFT_DOWN_KEY: getModel()->setPrevEncoderMultiplier(); break;
+        case KeyboardManager::KeyID::Key0: getModel()->setNextEncoderMultiplier(); break;
+        case KeyboardManager::KeyID::Key7: getModel()->setPrevEncoderMultiplier(); break;
 
-        case SystemKeyID::RIGHT_UP_KEY: getModel()->increasePosition(); break;
-        case SystemKeyID::RIGHT_DOWN_KEY: getModel()->decreasePosition(); break;
+        case KeyboardManager::KeyID::Key3: getModel()->increasePosition(); break;
+        case KeyboardManager::KeyID::Key4: getModel()->decreasePosition(); break;
 
         default: break;
     }

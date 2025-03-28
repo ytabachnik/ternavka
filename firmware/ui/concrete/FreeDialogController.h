@@ -9,7 +9,7 @@ class FreeDialogController : public BaseCrossFeedDialogController
 {
 public:
     FreeDialogController(const std::string& name, BaseUIModel* model, BaseUIView* view);
-    void handleKeyStateChanged(uint8_t keyIndex) override;
+    void handleKeyStateChanged(KeyboardManager::KeyID keyID) override;
 
     void onSelected() override;
     void onDeselected() override;

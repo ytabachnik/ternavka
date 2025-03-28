@@ -5,7 +5,8 @@
 #include <vector>
 #include <string>
 
-class MenuController : public BaseUIController {
+class MenuController : public BaseUIController
+{
 public:
     MenuController(const std::string& name, BaseUIModel* model, BaseUIView* view);
 
@@ -15,7 +16,7 @@ public:
     // Set the particular subcontroller as active.
     void setActive(BaseUIController* subController);
 
-    void handleKeyStateChanged(uint8_t keyIndex) override;
+    void handleKeyStateChanged(KeyboardManager::KeyID keyID) override;
     void display() override;
 
     void update() override

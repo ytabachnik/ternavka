@@ -26,10 +26,11 @@ KeyboardManager::KeyboardManager(MCP23S17& mcp, bool gpioA, int numKeys)
     }
 }
 
-bool KeyboardManager::isKeyPressed(int keyIndex, uint32_t& timeSincePressed)
+bool KeyboardManager::isKeyPressed(KeyID keyID, uint32_t& timeSincePressed)
 {
     timeSincePressed = 0;
 
+    int8_t keyIndex = static_cast<int>(keyID);
     if (keyIndex < 0 || keyIndex >= numKeys || keyIndex >= MAX_KEYS_COUNT)
     {
         return false;
@@ -63,17 +64,18 @@ bool KeyboardManager::isKeyPressed(int keyIndex, uint32_t& timeSincePressed)
 }
 
 // this one used to detect "ON" state only, for convenience
-bool KeyboardManager::isKeyStateChanged(int keyIndex)
+bool KeyboardManager::isKeyStateChanged(KeyID keyID)
 {
     bool newState = false;
-    return isKeyStateChanged(keyIndex, newState) & newState;
+    return isKeyStateChanged(keyID, newState) & newState;
 }
 
-bool KeyboardManager::isKeyStateChanged(int keyIndex, bool& newState)
+bool KeyboardManager::isKeyStateChanged(KeyID keyID, bool& newState)
 {
     uint32_t timeSincePressed  = 0;
-    newState = isKeyPressed(keyIndex, timeSincePressed);
+    newState = isKeyPressed(keyID, timeSincePressed);
 
+    int8_t keyIndex = static_cast<int>(keyID);
     if (last_key_state_changed[keyIndex] != newState)
     {
         last_key_state_changed[keyIndex] = newState;

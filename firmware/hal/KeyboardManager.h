@@ -3,24 +3,40 @@
 
 #include "..\lowlevel\MCP23S17.h"
 
-// Max keys supported.
-#define MAX_KEYS_COUNT 16
-
 // Debounce time for the button, in msec
 #define DEBOUNCE_TIME 20
 
-class KeyboardManager {
+class KeyboardManager 
+{
+    static const int8_t MAX_KEYS_COUNT = 8;
+
+public:
+    // System key ID.
+    enum class KeyID
+    {
+        Key0 = 0,
+        Key1 = 1,
+        Key2 = 2,
+        Key3 = 3,
+
+        Key4 = 4,
+        Key5 = 5,
+        Key6 = 6,
+        Key7 = 7,
+        VALUE_COUNT = 8 // This helps in determining the number of enum values
+    };
+
 public:
     KeyboardManager(MCP23S17& mcp, bool gpioA, int numKeys);
 
     // timeSincePressed contains the time since the button is pressed.
-    bool isKeyPressed(int keyIndex, uint32_t& timeSincePressed);
+    bool isKeyPressed(KeyID keyID, uint32_t& timeSincePressed);
 
     // Return true once only until the key is released and pressed again.
-    bool isKeyStateChanged(int keyIndex, bool& newState);
+    bool isKeyStateChanged(KeyID keyID, bool& newState);
 
     // this one used to detect "ON" state only.
-    bool isKeyStateChanged(int keyIndex);
+    bool isKeyStateChanged(KeyID keyID);
 
 private:
     MCP23S17& mcp;

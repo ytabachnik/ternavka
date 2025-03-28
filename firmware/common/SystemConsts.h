@@ -9,19 +9,6 @@
  7  6 5  4
 */ 
 
-enum class SystemKeyID
-{
-    LEFT_UP_KEY = 0,
-    MENU_PREV_KEY = 1,
-    MENU_NEXT_KEY = 2,
-    RIGHT_UP_KEY = 3,
-
-    RIGHT_DOWN_KEY = 4,
-    MENU_OK_KEY = 5,
-    MENU_CANCEL_KEY = 6,
-    LEFT_DOWN_KEY = 7
-};
-
 // LEDs - actually the same as Keys.
 /*
  0  1 2  3

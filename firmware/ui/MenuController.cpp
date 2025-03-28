@@ -1,7 +1,8 @@
 #include "MenuController.h"
 #include <iostream>
 
-#include "SystemConsts.h"
+#include "KeyboardManager.h"
+
 MenuController::MenuController(const std::string& name, BaseUIModel* model, BaseUIView* view) :
     BaseUIController(name, model, view), parent(nullptr),
     activeSubcontroller(nullptr), selectedIndex(0)
@@ -34,13 +35,12 @@ void MenuController::setActive(BaseUIController* subController)
     }
 }
 
-void MenuController::handleKeyStateChanged(uint8_t keyIndex)
+void MenuController::handleKeyStateChanged(KeyboardManager::KeyID keyID)
 {
-    SystemKeyID keyID = static_cast<SystemKeyID>(keyIndex);
     if (activeSubcontroller && !activeSubcontroller->isTerminal())
     {
-        activeSubcontroller->handleKeyStateChanged(keyIndex);
-        if (keyID == SystemKeyID::MENU_CANCEL_KEY)
+        activeSubcontroller->handleKeyStateChanged(keyID);
+        if (keyID == KeyboardManager::KeyID::Key6)
         {
             activeSubcontroller->onExited();
             activeSubcontroller = nullptr;
@@ -52,30 +52,30 @@ void MenuController::handleKeyStateChanged(uint8_t keyIndex)
     else if (activeSubcontroller && activeSubcontroller->isTerminal())
     {
         // Send the key state changed flag to the active subcontroller, if any.
-        activeSubcontroller->handleKeyStateChanged(keyIndex);
+        activeSubcontroller->handleKeyStateChanged(keyID);
     }
 
     switch (keyID)
     {
-        case SystemKeyID::MENU_PREV_KEY:
+        case KeyboardManager::KeyID::Key1:
         {
             prevKeyStateChanged();
             break;
         }
 
-        case SystemKeyID::MENU_NEXT_KEY:
+        case KeyboardManager::KeyID::Key2:
         {
             nextKeyStateChanged();
             break;
         }
 
-        case SystemKeyID::MENU_OK_KEY:
+        case KeyboardManager::KeyID::Key5:
         {
             OKKeyStateChanged();
             break;
         }
 
-        case SystemKeyID::MENU_CANCEL_KEY:
+        case KeyboardManager::KeyID::Key6:
         {
             cancelKeyStateChanged();
             break;

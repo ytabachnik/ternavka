@@ -68,116 +68,6 @@ struct LEDState
     bool keyHandled;
 };
 
-/// @brief Read the keyboard.
-/// @param ledStates 
-/// @param kybdManager 
-void ReadKeyboard(LEDState* ledStates, KeyboardManager& kybdManager, MultiDisplayManager& displayManager)
-{
-    uint32_t timeSincePressed = 0;
-    for (int i = 0; i < KEYS_COUNT; i ++)
-    {
-        if (kybdManager.isKeyPressed(i, timeSincePressed))
-        {
-            displayManager.setActiveDisplay((int)SystemDisplayID::CENTER_DISPLAY);
-
-            char textMessage[32] = {0};
-            sprintf(textMessage, "%i pressed - %i msec", i, timeSincePressed);
-            displayManager.clearSquare(0, i*8, 128, 8);
-            displayManager.drawString(0, i*8, 1, textMessage);
-
-            // Waiting for key release before the mode change.
-            if (ledStates[i].keyHandled) continue;
-
-            ledStates[i].isChanged = true;
-            ledStates[i].keyHandled = true;
-
-            ledStates[i].index ++;
-            if (ledStates[i].index > MAX_LED_STATE)
-            {
-                ledStates[i].index = 0;
-            }
-        }
-        else
-        {
-            displayManager.clearSquare(0, i*8, 128, 8);
-            ledStates[i].keyHandled = false;
-        }
-    }
-
-    // Update buffer content once.
-    displayManager.show();
-}
-
-/// @brief Update states on the LEDs themselves.
-void UpdateKeyboardStateOnLEDs(LEDState* ledStates, LEDManager& ledManager)
-{
-    for (int i = 0; i < LEDS_COUNT; i ++)
-    {
-        // Do not touch states if the button wasn't pressed.
-        if (false == ledStates[i].isChanged) continue;
- 
-        int ledState = ledStates[i].index;
-        switch (ledState)
-        {
-            case 0: ledManager.off(i); break;
-            case 1: ledManager.longBlink(i); break;
-            case 2: ledManager.shortBlink(i); break;
-            case 3: ledManager.errorBlink(i); break;
-            case 4: ledManager.on(i); break;;
-
-            default: break;
-        }
-    }
-}
-
-/// @brief Update LED states on the screens
-void UpdateKeyboardStateOnScreens(LEDState* ledStates, MultiDisplayManager& displayManager)
-{
-    for (int i = 0; i < LEDS_COUNT; i ++)
-    {
-        // Do not touch states if the button wasn't pressed.
-        if (false == ledStates[i].isChanged) continue;
- 
-        // Draw LED states on the screen.
-        switch (i)
-        {
-            case 0:
-            {
-                displayManager.setActiveDisplay((int)SystemDisplayID::LEFT_DISPLAY);
-
-                displayManager.clear();
-                if (ledStates[i].isChanged) displayManager.drawSquare(0, 0, 16, 16);
-                displayManager.show();
-
-                break;
-            }
-
-            case 7:
-            {
-                displayManager.setActiveDisplay((int)SystemDisplayID::LEFT_DISPLAY);
-
-                displayManager.clear();
-                if (ledStates[i].isChanged) displayManager.drawSquare(0, 32, 16, 16);
-                displayManager.show();
-
-                break;
-            }
-        
-        default:
-            break;
-        }
-    }
-}
-
-/// @brief Reset keyboard changed flags.
-void ResetKeyboardChangdFlags(LEDState* ledStates)
-{
-    for (int i = 0; i < LEDS_COUNT; i ++)
-    {
-        ledStates[i].isChanged = false;
-    }
-}
-
 /// @brief Initialize the I2C part.
 void initializeI2C()
 {
@@ -264,13 +154,6 @@ int main()
     displayManager.drawStringCentered(10, 3, "MIII");
     displayManager.show();
     */
-   
-    LEDState ledStates[LEDS_COUNT];
-    for (int8_t i = 0; i < KEYS_COUNT; i ++)
-    {
-        ledStates[i].index = 0;
-        ledStates[i].isChanged = false;
-    }
 
     while (true)
     {
@@ -278,22 +161,16 @@ int main()
 
         ledManager.update();
 
-//        ReadKeyboard(ledStates, kybdManager, displayManager);
-
-        for (int8_t i = 0; i < KEYS_COUNT; i ++)
+        for (uint8_t i = 0; i < (int8_t)KeyboardManager::KeyID::VALUE_COUNT; i ++)
         {
-            if (kybdManager.isKeyStateChanged(i))
+            KeyboardManager::KeyID keyID = static_cast<KeyboardManager::KeyID>(i);
+            if (kybdManager.isKeyStateChanged(keyID))
             {
-                systemMenu.handleKeyStateChanged(i);
+                systemMenu.handleKeyStateChanged(keyID);
             }
         }
 
         systemMenu.update();
-
-//        UpdateKeyboardStateOnLEDs(ledStates, ledManager);
-//        UpdateKeyboardStateOnScreens(ledStates, displayManager);
-
-//        ResetKeyboardChangdFlags(ledStates);
     }
 
     return 0;

@@ -4,6 +4,7 @@
 class BaseUIModel;
 class BaseUIView;
 
+#include "hal/KeyboardManager.h"
 #include <string>
 
 class BaseUIController
@@ -14,7 +15,8 @@ public:
     {
     }
 
-    virtual void handleKeyStateChanged(uint8_t keyIndex) = 0;
+    virtual void handleKeyStateChanged(KeyboardManager::KeyID keyID) = 0;
+
     virtual void display() = 0;
     virtual void update();
 

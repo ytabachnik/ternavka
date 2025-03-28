@@ -6,11 +6,6 @@ DialogController::DialogController(const std::string& name, BaseUIModel* model, 
 {
 }
 
-void DialogController::handleKeyStateChanged(uint8_t keyIndex)
-{
-    // Dialogs do not handle key presses other than navigation
-}
-
 // Dialogs are always Terminal.
 bool DialogController::isTerminal() const
 {
