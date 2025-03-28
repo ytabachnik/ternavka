@@ -13,8 +13,6 @@
 #include "hal/KeyboardManager.h"
 #include "hal/MultiDisplayManager.h"
 
-
-#include "ui/SystemMenu.h"
 #include "ui/MenuModel.h"
 #include "ui/MenuView.h"
 #include "ui/MenuController.h"
@@ -203,7 +201,7 @@ void initializeSPI()
 }
 
 // Initialize the menu subsystem.
-void initializeMenu(SystemMenu& systemMenu, SystemFacade& facade);
+void initializeMenu(MenuController& rootLevelMenu, SystemFacade& facade);
 
 MenuModel menuModel;
 MenuView menuView(&menuModel);
@@ -245,7 +243,7 @@ int main()
     // System Facade joins all the HAL components together.
     SystemFacade facade(&displayManager, &ledManager, &kybdManager);
 
-    SystemMenu systemMenu(&menuModel, &menuView);
+    MenuController systemMenu("Main Menu", &menuModel, &menuView);
     initializeMenu(systemMenu, facade);
 
     displayManager.setActiveDisplay(0);
@@ -299,21 +297,21 @@ int main()
     return 0;
 }
 
-void initializeMenu(SystemMenu& systemMenu, SystemFacade& facade)
+void initializeMenu(MenuController& systemMenu, SystemFacade& facade)
 {
     freeDialogView.setFacade(&facade);
     freeDialogController.setFacade(&facade);
-    mainMenu.addSubcontroller(&freeDialogController);
+    mainMenu.add(&freeDialogController);
 
-    mainMenu.addSubcontroller(&subMenu1);
-    mainMenu.addSubcontroller(&subMenu2);
+    mainMenu.add(&subMenu1);
+    mainMenu.add(&subMenu2);
 
-    subMenu1.addSubcontroller(&subSubMenu1);
-    subMenu1.addSubcontroller(&subSubMenu2);
-    subMenu1.addSubcontroller(&dialog2);
+    subMenu1.add(&subSubMenu1);
+    subMenu1.add(&subSubMenu2);
+    subMenu1.add(&dialog2);
 
-    //mainMenu.
-    systemMenu.setActiveMenu(&mainMenu);
+    mainMenu.setActive(&freeDialogController);
+    systemMenu.setActive(&mainMenu);
 }
 
 /*

@@ -25,7 +25,6 @@ add_executable(ternavka
     ui/BaseUIView.cpp 
     ui/MenuController.cpp 
     ui/DialogController.cpp 
-    ui/SystemMenu.cpp 
 
     ui/concrete/BaseCrossFeedDialogController.cpp
     ui/concrete/BaseCrossFeedMenuController.cpp

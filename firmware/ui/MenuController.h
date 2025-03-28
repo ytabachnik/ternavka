@@ -8,8 +8,12 @@
 class MenuController : public BaseUIController {
 public:
     MenuController(const std::string& name, BaseUIModel* model, BaseUIView* view);
-    
-    void addSubcontroller(BaseUIController* subController);
+
+    // Add the subcontroller.
+    void add(BaseUIController* subController);
+
+    // Set the particular subcontroller as active.
+    void setActive(BaseUIController* subController);
 
     void handleKeyStateChanged(uint8_t keyIndex) override;
     void display() override;

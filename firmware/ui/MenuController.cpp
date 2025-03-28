@@ -14,9 +14,24 @@ bool MenuController::isTerminal() const
     return false;
 }
 
-void MenuController::addSubcontroller(BaseUIController* subController)
+void MenuController::add(BaseUIController* subController)
 {
     subControllers.push_back(subController);
+}
+
+void MenuController::setActive(BaseUIController* subController)
+{
+    if (activeSubcontroller)
+    {
+        activeSubcontroller->onDeselected();
+    }
+
+    activeSubcontroller = subController;
+
+    if (activeSubcontroller)
+    {
+        activeSubcontroller->onSelected();
+    }
 }
 
 void MenuController::handleKeyStateChanged(uint8_t keyIndex)
