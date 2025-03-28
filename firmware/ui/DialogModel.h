@@ -8,9 +8,8 @@ class DialogModel : public BaseUIModel
 public:
     DialogModel() : BaseUIModel()
     {
+        resetAllSections();
     }
-
-    // Add specific data and methods for the dialog model
 };
 
 #endif // DIALOG_MODEL_H

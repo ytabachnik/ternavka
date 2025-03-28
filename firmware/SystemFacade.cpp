@@ -1,9 +1,11 @@
 #include "SystemFacade.h"
 
 SystemFacade::SystemFacade(MultiDisplayManager* displayMgr, LEDManager* ledMgr, KeyboardManager* kybdMgr)
-    : displayManager(displayManager),
+    : displayManager(displayMgr),
       ledManager(ledMgr),
-      keyboardManager(kybdMgr) {}
+      keyboardManager(kybdMgr)
+{
+}
 
 // Getters for the underlying components
 MultiDisplayManager* SystemFacade::getDisplayManager() const

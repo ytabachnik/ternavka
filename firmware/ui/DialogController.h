@@ -8,7 +8,7 @@ class DialogController : public BaseUIController
 {
 public:
     DialogController(const std::string& name, BaseUIModel* model, BaseUIView* view);
-    void handleKeyStateChanged(int8_t keyIndex) override;
+    void handleKeyStateChanged(uint8_t keyIndex) override;
     void display() override;
 
     // Method to distinguish between menus and dialogs

@@ -1,6 +1,8 @@
 #ifndef BASE_UI_VIEW_H
 #define BASE_UI_VIEW_H
 
+#include <pico/stdlib.h>
+
 class BaseUIModel;
 
 /// @brief Base class for UI views.
@@ -13,7 +15,8 @@ public:
 
     virtual void update();
 
-    virtual void render() = 0;
+    // Render the particular section.
+    virtual void render(uint8_t sectionIndex) = 0;
 
 protected:
     BaseUIModel* model;

@@ -8,7 +8,7 @@ class SystemMenu : public MenuController
 public:
     SystemMenu(BaseUIModel* model, BaseUIView* view);
     void setActiveMenu(MenuController* menu);
-    void handleKeyStateChanged(int8_t keyIndex);
+    void handleKeyStateChanged(uint8_t keyIndex);
     void display();
     void update();
 

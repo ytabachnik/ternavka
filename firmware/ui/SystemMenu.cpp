@@ -11,7 +11,7 @@ void SystemMenu::setActiveMenu(MenuController* menu)
     activeMenu = menu;
 }
 
-void SystemMenu::handleKeyStateChanged(int8_t keyIndex)
+void SystemMenu::handleKeyStateChanged(uint8_t keyIndex)
 {
     if (activeMenu)
     {

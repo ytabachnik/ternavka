@@ -6,7 +6,7 @@ DialogController::DialogController(const std::string& name, BaseUIModel* model, 
 {
 }
 
-void DialogController::handleKeyStateChanged(int8_t keyIndex)
+void DialogController::handleKeyStateChanged(uint8_t keyIndex)
 {
     // Dialogs do not handle key presses other than navigation
 }

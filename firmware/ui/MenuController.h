@@ -11,9 +11,19 @@ public:
     
     void addSubcontroller(BaseUIController* subController);
 
-    void handleKeyStateChanged(int8_t keyIndex) override;
+    void handleKeyStateChanged(uint8_t keyIndex) override;
     void display() override;
 
+    void update() override
+    {
+        BaseUIController::update();
+
+        if (activeSubcontroller)
+        {
+            activeSubcontroller->update();
+        }
+    }
+    
     // Method to distinguish between menus and dialogs
     bool isTerminal() const override;
 

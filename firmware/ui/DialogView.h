@@ -1,6 +1,7 @@
 #ifndef DIALOG_VIEW_H
 #define DIALOG_VIEW_H
 
+#include <pico/stdlib.h>
 #include <iostream>
 #include "BaseUIView.h"
 
@@ -10,10 +11,10 @@ public:
     {
     }
 
-    void render() override
+    void render(uint8_t sectionIndex) override
     {
         // Implement rendering logic for the dialog view
-        std::cout << "Rendering Dialog View" << std::endl;
+        std::cout << "Rendering Dialog View Section " << sectionIndex << std::endl;
     }
 };
 

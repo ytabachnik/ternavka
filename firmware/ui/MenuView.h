@@ -12,9 +12,10 @@ public:
         {
         }
 
-    void render() override {
+    void render(uint8_t sectionIndex) override
+    {
         // Implement rendering logic for the menu view
-        std::cout << "Rendering Menu View" << std::endl;
+        std::cout << "Rendering Menu View Section " << sectionIndex << std::endl;
     }
 };
 

@@ -3,9 +3,11 @@
 
 void BaseUIView::update()
 {
-    if (model->isChanged())
+    for (uint8_t i = 0; i < BaseUIModel::MAX_UI_MODEL_SECTION; i ++)
+    if (model->isSectionChanged(i))
     {
-        render();
-        model->setChanged(false);
+        render(i);
     }
+
+    model->resetAllSections();
 }

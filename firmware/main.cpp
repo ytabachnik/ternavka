@@ -7,21 +7,12 @@
 #include "lowlevel/MCP23S17.h"
 #include "lowlevel/TCA9548A.h"
 
+#include "common/SystemConsts.h"
+
 #include "hal/LEDManager.h"
 #include "hal/KeyboardManager.h"
 #include "hal/MultiDisplayManager.h"
 
-/*
-#include "ui/MenuSystem.h"
-#include "ui/BaseMenuComponent.h"
-#include "ui/SubmenuComponent.h"
-#include "ui/DialogModel.h"
-#include "ui/SpeedDialogModel.h"
-#include "ui/DialogView.h"
-#include "ui/SpeedDialogView.h"
-#include "ui/DialogController.h"
-#include "ui/SpeedDialogController.h"
-*/
 
 #include "ui/SystemMenu.h"
 #include "ui/MenuModel.h"
@@ -31,8 +22,10 @@
 #include "ui/DialogView.h"
 #include "ui/DialogController.h"
 
-#include "ui/concrete/FreeDialogController.h"
 #include "ui/concrete/FreeDialogModel.h"
+#include "ui/concrete/FreeDialogView.h"
+#include "ui/concrete/FreeDialogController.h"
+
 
 #include "SystemFacade.h"
 #include "CurrentTimeManager.h"
@@ -67,11 +60,6 @@ const int KEYS_COUNT = 8;
 const int SCREEN_WIDTH = 128;
 const int SCREEN_HEIGHT = 64;
 
-const int SCREENS_COUNT = 3;
-const int LEFT_SCREEN = 0;
-const int CENTER_SCREEN = 1;
-const int RIGHT_SCREEN = 2;
-
 const int MAX_LED_STATE = 4;
 
 struct LEDState
@@ -91,7 +79,7 @@ void ReadKeyboard(LEDState* ledStates, KeyboardManager& kybdManager, MultiDispla
     {
         if (kybdManager.isKeyPressed(i, timeSincePressed))
         {
-            displayManager.setActiveDisplay(CENTER_SCREEN);
+            displayManager.setActiveDisplay((int)SystemDisplayID::CENTER_DISPLAY);
 
             char textMessage[32] = {0};
             sprintf(textMessage, "%i pressed - %i msec", i, timeSincePressed);
@@ -156,7 +144,7 @@ void UpdateKeyboardStateOnScreens(LEDState* ledStates, MultiDisplayManager& disp
         {
             case 0:
             {
-                displayManager.setActiveDisplay(LEFT_SCREEN);
+                displayManager.setActiveDisplay((int)SystemDisplayID::LEFT_DISPLAY);
 
                 displayManager.clear();
                 if (ledStates[i].isChanged) displayManager.drawSquare(0, 0, 16, 16);
@@ -167,7 +155,7 @@ void UpdateKeyboardStateOnScreens(LEDState* ledStates, MultiDisplayManager& disp
 
             case 7:
             {
-                displayManager.setActiveDisplay(LEFT_SCREEN);
+                displayManager.setActiveDisplay((int)SystemDisplayID::LEFT_DISPLAY);
 
                 displayManager.clear();
                 if (ledStates[i].isChanged) displayManager.drawSquare(0, 32, 16, 16);
@@ -231,7 +219,7 @@ MenuController subSubMenu1("Sub Sub Menu 1", &menuModel, &menuView);
 MenuController subSubMenu2("Sub Sub Menu 2", &menuModel, &menuView);
 
 FreeDialogModel freeDialogModel;
-DialogView freeDialogView(&dialogModel);
+FreeDialogView freeDialogView(&freeDialogModel);
 
 FreeDialogController freeDialogController("FREE", &freeDialogModel, &freeDialogView);
 DialogController dialog2("SubDialog 2", &dialogModel, &dialogView);
@@ -260,12 +248,12 @@ int main()
     SystemMenu systemMenu(&menuModel, &menuView);
     initializeMenu(systemMenu, facade);
 
-    /*
     displayManager.setActiveDisplay(0);
     displayManager.clear();
     displayManager.drawStringCentered(10, 1, "MAUUU");
     displayManager.show();
 
+    /*
     displayManager.setActiveDisplay(1);
     displayManager.clear();
     displayManager.drawStringCentered(10, 2, "MRRR");
@@ -300,6 +288,8 @@ int main()
             }
         }
 
+        systemMenu.update();
+
 //        UpdateKeyboardStateOnLEDs(ledStates, ledManager);
 //        UpdateKeyboardStateOnScreens(ledStates, displayManager);
 
@@ -311,6 +301,7 @@ int main()
 
 void initializeMenu(SystemMenu& systemMenu, SystemFacade& facade)
 {
+    freeDialogView.setFacade(&facade);
     freeDialogController.setFacade(&facade);
     mainMenu.addSubcontroller(&freeDialogController);
 

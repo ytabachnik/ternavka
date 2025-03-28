@@ -19,7 +19,7 @@ void MenuController::addSubcontroller(BaseUIController* subController)
     subControllers.push_back(subController);
 }
 
-void MenuController::handleKeyStateChanged(int8_t keyIndex)
+void MenuController::handleKeyStateChanged(uint8_t keyIndex)
 {
     SystemKeyID keyID = static_cast<SystemKeyID>(keyIndex);
     if (activeSubcontroller && !activeSubcontroller->isTerminal())
@@ -35,8 +35,14 @@ void MenuController::handleKeyStateChanged(int8_t keyIndex)
         return;
     }
 
+    // Send the key state changed flag to the active subcontroller, if any.
+    if (activeSubcontroller)
+    {
+        activeSubcontroller->handleKeyStateChanged(keyIndex);
+    }
+
     switch (keyID)
-    {    
+    {
         case SystemKeyID::MENU_PREV_KEY:
             if (!subControllers.empty()) 
             {

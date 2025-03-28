@@ -14,7 +14,7 @@ public:
     {
     }
 
-    virtual void handleKeyStateChanged(int8_t keyIndex) = 0;
+    virtual void handleKeyStateChanged(uint8_t keyIndex) = 0;
     virtual void display() = 0;
     virtual void update();
 

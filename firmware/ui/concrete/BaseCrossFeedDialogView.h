@@ -1,22 +1,17 @@
-#ifndef DIALOG_VIEW_H
-#define DIALOG_VIEW_H
+#ifndef _BASE_CROSS_FEED_DIALOG_VIEW_H_
+#define _BASE_CROSS_FEED_DIALOG_VIEW_H_
 
 #include <iostream>
-#include "BaseView.h"
+#include "BaseUIView.h"
+#include "SystemFacade.h"
 
 class BaseCrossFeedDialogView : public DialogView
 {
 public:
     BaseCrossFeedDialogView(BaseUIModel* model) :
-    BaseUIView(model),
+    DialogView(model),
     facade(nullptr)
     {
-    }
-
-    void render() override
-    {
-        // Implement rendering logic for the dialog view
-        std::cout << "Rendering Dialog View" << std::endl;
     }
 
     // Access to the Facade.
@@ -27,4 +22,4 @@ private:
     SystemFacade* facade;
 };
 
-#endif // DIALOG_VIEW_H
+#endif // _BASE_CROSS_FEED_DIALOG_VIEW_H_
