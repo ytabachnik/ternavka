@@ -158,7 +158,6 @@ int main()
     while (true)
     {
         CurrentTimeManager::update();
-
         ledManager.update();
 
         for (uint8_t i = 0; i < (int8_t)KeyboardManager::KeyID::VALUE_COUNT; i ++)
@@ -167,6 +166,12 @@ int main()
             if (kybdManager.isKeyStateChanged(keyID))
             {
                 systemMenu.handleKeyStateChanged(keyID);
+            }
+            uint32_t timeSincePress = 0;
+            if (kybdManager.isKeyPressed(keyID, timeSincePress))
+            {
+                printf("%i", i);
+                systemMenu.handleKeyPressed(keyID, timeSincePress);
             }
         }
 
@@ -192,87 +197,3 @@ void initializeMenu(MenuController& systemMenu, SystemFacade& facade)
     mainMenu.setActive(&freeDialogController);
     systemMenu.setActive(&mainMenu);
 }
-
-/*
-void initializeMenuSystem(MenuSystem& menuSystem, SystemFacade& facade)
-{    
-    // Create models
-    // Settings - Screen
-    DialogModel brightnessDialogModel("Brightness");
-    DialogView brightnessDialogView(&brightnessDialogModel);
-    DialogController brightnessDialogController(&brightnessDialogModel, &brightnessDialogView);
-    BaseMenuComponent brightnessComponent(&brightnessDialogController, &brightnessDialogView, &brightnessDialogModel, &facade);
-
-    DialogModel contrastDialogModel("Contrast");
-    DialogView contrastDialogView(&contrastDialogModel);
-    DialogController contrastDialogController(&contrastDialogModel, &contrastDialogView);
-    BaseMenuComponent contrastComponent(&contrastDialogController, &contrastDialogView, &contrastDialogModel, &facade);
-
-    // Settings - Connection
-    DialogModel usbDialogModel("USB");
-    DialogView usbDialogView(&usbDialogModel);
-    DialogController usbDialogController(&usbDialogModel, &usbDialogView);
-    BaseMenuComponent usbComponent(&usbDialogController, &usbDialogView, &usbDialogModel, &facade);
-
-    DialogModel bluetoothDialogModel("Bluetooth");
-    DialogView blueToothDialogView(&bluetoothDialogModel);
-    DialogController blueToothDialogController(&bluetoothDialogModel, &blueToothDialogView);
-    BaseMenuComponent blueToothComponent(&blueToothDialogController, &blueToothDialogView, &bluetoothDialogModel, &facade);
-
-    DialogModel wifiDialogModel("wifi");
-    DialogView wifiDialogView(&wifiDialogModel);
-    DialogController wifiDialogController(&wifiDialogModel, &wifiDialogView);
-    BaseMenuComponent wifiComponent(&wifiDialogController, &wifiDialogView, &wifiDialogModel, &facade);
-
-    // Top level
-    DialogModel freeDialogModel("FREE");
-    DialogView freeDialogView(&freeDialogModel);
-    DialogController freeDialogController(&freeDialogModel, &freeDialogView);
-    BaseMenuComponent freeDialogComponent(&freeDialogController, &freeDialogView, &freeDialogModel, &facade);
-
-    DialogModel stepDialogModel("STEP");
-    DialogView stepDialogView(&stepDialogModel);
-    DialogController stepDialogController(&stepDialogModel, &stepDialogView);
-    BaseMenuComponent stepDialogComponent(&stepDialogController, &stepDialogView, &stepDialogModel, &facade);
-
-    DialogModel settingsSubmenuModel("SETTINGS");
-    DialogView settingsSubmenuView(&settingsSubmenuModel);
-    DialogController settingsSubmenuController(&settingsSubmenuModel, &settingsSubmenuView);
-    BaseMenuComponent settingsSubmenuComponent(&settingsSubmenuController, &settingsSubmenuView, &settingsSubmenuModel, &facade);
-
-    DialogModel displaySubmenuModel("DISPLAY");
-    DialogView displaySubmenuView(&displaySubmenuModel);
-    DialogController displaySubmenuController(&displaySubmenuModel, &displaySubmenuView);
-    SubmenuComponent displaySubmenuComponent(&displaySubmenuController, &displaySubmenuView, &displaySubmenuModel, &facade);
-
-    DialogModel connectionSubmenuModel("connection");
-    DialogView connectionSubmenuView(&connectionSubmenuModel);
-    DialogController connectionSubmenuController(&connectionSubmenuModel, &connectionSubmenuView);
-    SubmenuComponent connectionSubmenuComponent(&connectionSubmenuController, &connectionSubmenuView, &connectionSubmenuModel, &facade);
-
-    // Build the hierarchy.
-    DialogModel rootModel("root");
-    DialogView rootView(&rootModel);
-    DialogController rootController(&rootModel, &rootView);
-    SubmenuComponent rootComponent(&rootController, &rootView, &rootModel, &facade);
-
-    displaySubmenuComponent.addChildren(&brightnessComponent);
-    displaySubmenuComponent.addChildren(&contrastComponent);
-
-    connectionSubmenuComponent.addChildren(&usbComponent);
-    connectionSubmenuComponent.addChildren(&wifiComponent);
-    connectionSubmenuComponent.addChildren(&blueToothComponent);
-
-    settingsSubmenuComponent.addChildren(&displaySubmenuComponent);
-    settingsSubmenuComponent.addChildren(&connectionSubmenuComponent);
-
-    rootComponent.addChildren(&freeDialogComponent);
-    rootComponent.addChildren(&stepDialogComponent);
-    rootComponent.addChildren(&settingsSubmenuComponent);
-    rootComponent.setCurrentChildID(0);
-
-    // Create menu system
-    menuSystem.setRoot(&rootComponent);
-}
-
-*/

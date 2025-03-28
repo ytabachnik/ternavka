@@ -86,6 +86,15 @@ void MenuController::handleKeyStateChanged(KeyboardManager::KeyID keyID)
     }
 }
 
+void MenuController::handleKeyPressed(KeyboardManager::KeyID keyID, uint32_t timeSincePress)
+{
+    // Menu Controller does not perform any handling for pressed (and hold) key for now.
+    if (activeSubcontroller)
+    {
+        activeSubcontroller->handleKeyPressed(keyID, timeSincePress);
+    }
+}
+
 void MenuController::display()
 {
     std::cout << "Menu: " << name << std::endl;

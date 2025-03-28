@@ -17,6 +17,8 @@ public:
     void setActive(BaseUIController* subController);
 
     void handleKeyStateChanged(KeyboardManager::KeyID keyID) override;
+    void handleKeyPressed(KeyboardManager::KeyID keyID, uint32_t timeSincePress) override;
+
     void display() override;
 
     void update() override

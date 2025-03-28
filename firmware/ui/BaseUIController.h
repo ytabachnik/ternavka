@@ -15,7 +15,11 @@ public:
     {
     }
 
-    virtual void handleKeyStateChanged(KeyboardManager::KeyID keyID) = 0;
+    // Handle the single key state change (once per press).
+    virtual void handleKeyStateChanged(KeyboardManager::KeyID keyID) {};
+
+    // Handle the continious key press
+    virtual void handleKeyPressed(KeyboardManager::KeyID keyID, uint32_t timeSincePress) {}
 
     virtual void display() = 0;
     virtual void update();

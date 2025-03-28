@@ -28,17 +28,28 @@ void FreeDialogController::handleKeyStateChanged(KeyboardManager::KeyID keyID)
 {
     BaseCrossFeedDialogController::handleKeyStateChanged(keyID);
 
-    // Rights buttons are responsible for the actual position.
     // Left buttons are responsible for Encoder Multiplier.
     switch (keyID)
     {
         case KeyboardManager::KeyID::Key0: getModel()->setNextEncoderMultiplier(); break;
         case KeyboardManager::KeyID::Key7: getModel()->setPrevEncoderMultiplier(); break;
 
-        case KeyboardManager::KeyID::Key3: getModel()->increasePosition(); break;
-        case KeyboardManager::KeyID::Key4: getModel()->decreasePosition(); break;
-
         default: break;
     }
 }
 
+void FreeDialogController::handleKeyPressed(KeyboardManager::KeyID keyID, uint32_t timeSincePress)
+{
+    // Right buttons are responsible for the actual position.
+    // Temp code to do not increase the speed way too often.
+    if (timeSincePress % 1000 > 500)
+    {
+        switch (keyID)
+        {
+            case KeyboardManager::KeyID::Key3: getModel()->increasePosition(); break;
+            case KeyboardManager::KeyID::Key4: getModel()->decreasePosition(); break;
+
+            default: break;
+        }
+    }
+}
