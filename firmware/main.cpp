@@ -24,6 +24,8 @@
 #include "ui/concrete/FreeDialogView.h"
 #include "ui/concrete/FreeDialogController.h"
 
+#include "ui/concrete/BaseSettingsDialogModel.h"
+#include "ui/concrete/BaseSettingsDialogController.h"
 
 #include "SystemFacade.h"
 #include "CurrentTimeManager.h"
@@ -97,9 +99,6 @@ void initializeMenu(MenuController& rootLevelMenu, SystemFacade& facade);
 MenuModel menuModel;
 MenuView menuView(&menuModel);
 
-DialogModel dialogModel;
-DialogView dialogView(&dialogModel);
-
 MenuController mainMenu("Main Menu", &menuModel, &menuView);
 
 MenuController subMenu1("Sub Menu 1", &menuModel, &menuView);
@@ -109,9 +108,12 @@ MenuController subSubMenu2("Sub Sub Menu 2", &menuModel, &menuView);
 
 FreeDialogModel freeDialogModel;
 FreeDialogView freeDialogView(&freeDialogModel);
-
 FreeDialogController freeDialogController("FREE", &freeDialogModel, &freeDialogView);
-DialogController dialog2("SubDialog 2", &dialogModel, &dialogView);
+
+BaseSettingsDialogModel settingsDialogModel;
+DialogView settingsDialogView(&settingsDialogModel);
+BaseSettingsDialogController settingsDialogController("SETTINGS", &settingsDialogModel, &settingsDialogView);
+
 
 int main()
 {
@@ -187,12 +189,15 @@ void initializeMenu(MenuController& systemMenu, SystemFacade& facade)
     freeDialogController.setFacade(&facade);
     mainMenu.add(&freeDialogController);
 
+    //settingsDialogView.setFacade(&facade);
+    settingsDialogController.setFacade(&facade);
+    mainMenu.add(&settingsDialogController);
+
     mainMenu.add(&subMenu1);
     mainMenu.add(&subMenu2);
 
     subMenu1.add(&subSubMenu1);
     subMenu1.add(&subSubMenu2);
-    subMenu1.add(&dialog2);
 
     mainMenu.setActive(&freeDialogController);
     systemMenu.setActive(&mainMenu);

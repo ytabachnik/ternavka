@@ -44,6 +44,7 @@ target_include_directories(ternavka PRIVATE
      lowlevel
      common
      configuration
+     infra
      ui
      ui/concrete
      libs/pico-ssd1306
