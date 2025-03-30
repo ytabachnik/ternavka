@@ -1,19 +1,19 @@
-#ifndef _BASE_CROSS_FEED_DIALOG_VIEW_H_
-#define _BASE_CROSS_FEED_DIALOG_VIEW_H_
+#ifndef _BASE_CROSS_FEED_MENU_VIEW_H_
+#define _BASE_CROSS_FEED_MENU_VIEW_H_
 
 #include <iostream>
 #include <string>
 
-#include "DialogView.h"
+#include "MenuView.h"
 
 #include "SystemConsts.h"
 #include "SystemFacade.h"
 
-class BaseCrossFeedDialogView : public DialogView
+class BaseCrossFeedMenuView : public MenuView
 {
 public:
-    BaseCrossFeedDialogView(BaseUIModel* model, const std::string& baseViewName) :
-    DialogView(model),
+    BaseCrossFeedMenuView(BaseUIModel* model, const std::string& baseViewName) :
+    MenuView(model),
     facade(nullptr),
     viewName(baseViewName)
     {

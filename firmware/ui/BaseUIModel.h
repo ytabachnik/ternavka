@@ -23,9 +23,6 @@ public:
         {
             changedSectionMask |= (1 << sectionIndex);
         }
-
-        std::cout << sectionIndex << std::endl;
-        std::cout << changedSectionMask << std::endl;
     }
 
     // Method to check if a section changed flag is set

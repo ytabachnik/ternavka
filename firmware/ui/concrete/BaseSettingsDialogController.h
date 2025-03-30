@@ -4,6 +4,8 @@
 #include "BaseCrossFeedDialogController.h"
 #include "BaseSettingsDialogModel.h"
 
+#include "SystemConsts.h"
+
 // Base dialog controller for "Settings"
 class BaseSettingsDialogController : public BaseCrossFeedDialogController
 {
@@ -14,6 +16,11 @@ public:
     }
     //void handleKeyStateChanged(KeyboardManager::KeyID keyID) override;
     //void handleKeyPressed(KeyboardManager::KeyID keyID, uint32_t timeSincePress) override;
+
+    void onSelected() override
+    {
+        getModel()->setSectionChanged((int)SystemDisplayID::CENTER_DISPLAY);
+    }
 
 //  void onSelected() override;
 //  void onDeselected() override;

@@ -24,6 +24,9 @@
 #include "ui/concrete/FreeDialogView.h"
 #include "ui/concrete/FreeDialogController.h"
 
+#include "ui/concrete/BaseCrossFeedMenuView.h"
+#include "ui/concrete/BaseCrossFeedMenuController.h"
+
 #include "ui/concrete/BaseSettingsDialogModel.h"
 #include "ui/concrete/BaseSettingsDialogController.h"
 
@@ -98,20 +101,27 @@ void initializeMenu(MenuController& rootLevelMenu, SystemFacade& facade);
 
 MenuModel menuModel;
 MenuView menuView(&menuModel);
+MenuController mainMenu("Main Menu", &menuModel, &menuView, true);
 
-MenuController mainMenu("Main Menu", &menuModel, &menuView);
+MenuModel subMenu1Model;
+BaseCrossFeedMenuView subMenu1View(&subMenu1Model, "SubMenu 1");
+BaseCrossFeedMenuController subMenu1Controller("Sub Menu 1", &subMenu1Model, &subMenu1View, false);
 
-MenuController subMenu1("Sub Menu 1", &menuModel, &menuView);
-MenuController subMenu2("Sub Menu 2", &menuModel, &menuView);
-MenuController subSubMenu1("Sub Sub Menu 1", &menuModel, &menuView);
-MenuController subSubMenu2("Sub Sub Menu 2", &menuModel, &menuView);
+MenuModel subMenu2Model;
+BaseCrossFeedMenuView subMenu2View(&subMenu2Model, "SubMenu 2");
+BaseCrossFeedMenuController subMenu2Controller("Sub Menu 2", &subMenu2Model, &subMenu2View, false);
+
+/*
+MenuController subSubMenu1("Sub Sub Menu 1", &menuModel, &menuView, false);
+MenuController subSubMenu2("Sub Sub Menu 2", &menuModel, &menuView, false);
+*/
 
 FreeDialogModel freeDialogModel;
 FreeDialogView freeDialogView(&freeDialogModel);
 FreeDialogController freeDialogController("FREE", &freeDialogModel, &freeDialogView);
 
 BaseSettingsDialogModel settingsDialogModel;
-DialogView settingsDialogView(&settingsDialogModel);
+BaseCrossFeedDialogView settingsDialogView(&settingsDialogModel, "SETTINGS");
 BaseSettingsDialogController settingsDialogController("SETTINGS", &settingsDialogModel, &settingsDialogView);
 
 
@@ -137,8 +147,8 @@ int main()
     // System Facade joins all the HAL components together.
     SystemFacade facade(&displayManager, &ledManager, &kybdManager);
 
-    MenuController systemMenu("Main Menu", &menuModel, &menuView);
-    initializeMenu(systemMenu, facade);
+    MenuController mainMenu("Main Menu", &menuModel, &menuView, true);
+    initializeMenu(mainMenu, facade);
 
     /*
     displayManager.setActiveDisplay(0);
@@ -167,38 +177,41 @@ int main()
             KeyboardManager::KeyID keyID = static_cast<KeyboardManager::KeyID>(i);
             if (kybdManager.isKeyStateChanged(keyID))
             {
-                systemMenu.handleKeyStateChanged(keyID);
+                mainMenu.handleKeyStateChanged(keyID);
             }
             uint32_t timeSincePress = 0;
             if (kybdManager.isKeyPressed(keyID, timeSincePress))
             {
-                printf("%i", i);
-                systemMenu.handleKeyPressed(keyID, timeSincePress);
+                mainMenu.handleKeyPressed(keyID, timeSincePress);
             }
         }
 
-        systemMenu.update();
+        mainMenu.update();
     }
 
     return 0;
 }
 
-void initializeMenu(MenuController& systemMenu, SystemFacade& facade)
+void initializeMenu(MenuController& mainMenu, SystemFacade& facade)
 {
     freeDialogView.setFacade(&facade);
     freeDialogController.setFacade(&facade);
     mainMenu.add(&freeDialogController);
 
-    //settingsDialogView.setFacade(&facade);
+    settingsDialogView.setFacade(&facade);
     settingsDialogController.setFacade(&facade);
     mainMenu.add(&settingsDialogController);
 
-    mainMenu.add(&subMenu1);
-    mainMenu.add(&subMenu2);
+    subMenu1View.setFacade(&facade);
+    subMenu1Controller.setFacade(&facade);
+    mainMenu.add(&subMenu1Controller);
 
-    subMenu1.add(&subSubMenu1);
-    subMenu1.add(&subSubMenu2);
+    subMenu2View.setFacade(&facade);
+    subMenu2Controller.setFacade(&facade);
+    mainMenu.add(&subMenu2Controller);
 
-    mainMenu.setActive(&freeDialogController);
-    systemMenu.setActive(&mainMenu);
+    //subMenu1Controller.add(&subSubMenu1);
+    //subMenu1Controller.add(&subSubMenu2);
+
+    mainMenu.activate(&freeDialogController);
 }

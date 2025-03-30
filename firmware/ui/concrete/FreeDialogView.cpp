@@ -5,7 +5,7 @@
 
 #include "hal/MultiDisplayManager.h"
 
-FreeDialogView::FreeDialogView(BaseUIModel* model) : BaseCrossFeedDialogView(model)
+FreeDialogView::FreeDialogView(BaseUIModel* model) : BaseCrossFeedDialogView(model, "FREE MODE")
 {
 }
 

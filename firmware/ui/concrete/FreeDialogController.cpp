@@ -24,7 +24,7 @@ void FreeDialogController::onDeselected()
 {
 }
 
-void FreeDialogController::handleKeyStateChanged(KeyboardManager::KeyID keyID)
+bool FreeDialogController::handleKeyStateChanged(KeyboardManager::KeyID keyID)
 {
     BaseCrossFeedDialogController::handleKeyStateChanged(keyID);
 
@@ -36,6 +36,8 @@ void FreeDialogController::handleKeyStateChanged(KeyboardManager::KeyID keyID)
 
         default: break;
     }
+
+    return false;
 }
 
 void FreeDialogController::handleKeyPressed(KeyboardManager::KeyID keyID, uint32_t timeSincePress)

@@ -8,7 +8,10 @@ MultiDisplayManager::MultiDisplayManager(TCA9548A& tca, uint8_t count, uint16_t 
     for (int i = 0; i < _channelsCount; ++i)
     {
         _displays[i].external_vcc = false; // or the display will show nothing.
+
         ssd1306_init(&_displays[i], width, height, address, i2c_instance);
+        clear();
+        show();
     }
 }
 

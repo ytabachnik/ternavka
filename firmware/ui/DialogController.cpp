@@ -12,10 +12,6 @@ bool DialogController::isTerminal() const
     return true;
 }
 
-void DialogController::display() {
-    std::cout << "Dialog: " << name << std::endl;
-}
-
 // Override virtual methods
 void DialogController::onEntered() {
     std::cout << name << " dialog entered." << std::endl;

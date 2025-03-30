@@ -16,7 +16,7 @@ public:
     virtual void update();
 
     // Render the particular section.
-    virtual void render(uint8_t sectionIndex) {};
+    virtual void render(uint8_t sectionIndex) = 0;
 
 protected:
     BaseUIModel* model;

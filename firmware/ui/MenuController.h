@@ -8,26 +8,26 @@
 class MenuController : public BaseUIController
 {
 public:
-    MenuController(const std::string& name, BaseUIModel* model, BaseUIView* view);
+    MenuController(const std::string& name, BaseUIModel* model, BaseUIView* view,
+        bool mainMenu);
 
     // Add the subcontroller.
     void add(BaseUIController* subController);
 
-    // Set the particular subcontroller as active.
-    void setActive(BaseUIController* subController);
+    // Activate the controller previously added, returns it index.
+    int8_t activate(BaseUIController* subController);
 
-    void handleKeyStateChanged(KeyboardManager::KeyID keyID) override;
+    bool handleKeyStateChanged(KeyboardManager::KeyID keyID) override;
     void handleKeyPressed(KeyboardManager::KeyID keyID, uint32_t timeSincePress) override;
 
-    void display() override;
-
+    // Call periodically to update system internals.
     void update() override
     {
         BaseUIController::update();
 
-        if (activeSubcontroller)
+        if (currentSubController)
         {
-            activeSubcontroller->update();
+            currentSubController->update();
         }
     }
     
@@ -52,14 +52,21 @@ protected:
     bool OKKeyStateChanged();
     bool cancelKeyStateChanged();
 
-    // Select active Subcontrol as Terminal.
-    void selectActiveSubcontrollerIfTerminal();
+    // Check/set whether next-level menu is active.
+    bool isNextLevelMenuActive();
+    bool setNextLevelMenuActive(bool value);
+
+    // Activation/Selection stuff.
+    void deactivateAndDeselectCurrentSubcontroller();
+    void activateAndSelectCurrentSubcontroller();
 
 private:
+    bool isMainMenu;
     MenuController* parent;
+
     std::vector<BaseUIController*> subControllers;
-    BaseUIController* activeSubcontroller;
-    size_t selectedIndex;
+    BaseUIController* currentSubController;
+    size_t currentSubControllerIndex;
 };
 
 #endif // MENU_CONTROLLER_H
